@@ -59,7 +59,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 
 			@Override
 			public boolean hasNext() {
-				return !TrackChunk.isTrackChunk(mf, iteratorOffset); // if this is the next track chunk, return false
+				return iteratorOffset < length && !TrackChunk.isTrackChunk(mf, iteratorOffset); // if this is the next track chunk, return false
 			}
 
 			@Override

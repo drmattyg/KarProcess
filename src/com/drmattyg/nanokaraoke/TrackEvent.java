@@ -26,6 +26,7 @@ public class TrackEvent {
 	private int offset;
 	private boolean hasStatusByte;
 	private int statusByte;
+	private TextEvent txt = null;
 	public int getOffset() { return offset; }
 	public EventType getEventType() { return eventType; }
 	public VarLength getEventTime() { return time; }
@@ -45,13 +46,14 @@ public class TrackEvent {
 	}
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta
 	public boolean isText() { return isMeta() && metaType == Marker.META_TEXT_MARKER; }
+	public TextEvent getTextEvent() { return isText() ? txt : null; }
 	private TrackEvent() {}
 	public static TrackEvent getInstance(TrackChunk tc, int offset) {
 		TrackEvent te = new TrackEvent();
 		te.setParent(tc);
 		te.offset = offset;
 		int myOffset = offset;
-		byte[] b = tc.getParent().getBytes();
+		byte[] b = te.getBytes();
 		te.time = VarLength.read(b, myOffset);
 		myOffset += te.time.size;
 		if(Marker.isMetaMarker(b[myOffset])) {
@@ -60,8 +62,8 @@ public class TrackEvent {
 			te.metaType = b[myOffset] & 0xFF;
 			myOffset++;
 			te.eventLength = VarLength.read(b, myOffset);
-			if(Marker.isTextMarker(b[myOffset])) {
-				// TODO: implement this?
+			if(Marker.isTextMarker((byte)te.metaType)) {
+				te.txt = TextEvent.makeTextEvent(te);
 			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {
 			te.eventType = EventType.Sysex;

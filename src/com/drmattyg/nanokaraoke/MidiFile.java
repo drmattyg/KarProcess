@@ -12,6 +12,15 @@ public class MidiFile implements Iterable<TrackChunk>{
 	public static class VarLength {
 		public int value; // the value of the var length field
 		public int size; // the size in bytes of the var length field
+		
+		
+		// lessons from the bug I fixed below:
+		// 1: Copying over the minimal data structure you need is worth the overhead probably; passing around the full byte array
+		// invites the kinds of bugs I encountered.  Copying into an immutable array improves safety, and also allows me to trim the amount
+		// of data that's being accessed.  I wouldn't have had this issue
+		// 2: Basic unit tests here on these functions of course would have caught this.  Bug got introduced when I refactored
+		// 3: The resuse of the term "i + offset", even once, should be a tipoff: don't do that.  Create a new variable.  That would have fixed the the error probably, 
+		// assuming we didn't do #1, which we should have
 		public static VarLength read(byte[] b, int offset) {
 			VarLength v = new VarLength();
 			v.value = 0;
