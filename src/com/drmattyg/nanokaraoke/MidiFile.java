@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class MidiFile implements Iterable<TrackChunk>{	
@@ -38,6 +40,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 	byte[] bytes;
 	int offset;
 	HeaderChunk header;
+	public List<IMetaEventHandler> metaEventHandlers = new ArrayList<IMetaEventHandler>();
 	private MidiFile(String s) {
 		Path path = Paths.get(s);
 		try {
@@ -85,6 +88,10 @@ public class MidiFile implements Iterable<TrackChunk>{
 			}
 			
 		};
+	}
+	
+	public void registerMetaEventHandler(IMetaEventHandler handler) {
+		metaEventHandlers.add(handler);
 	}
 	
 }

@@ -8,10 +8,15 @@ public class TrackEvent {
 	public static class Marker {
 		public static int META_MARKER = 0xFF;
 		public static int META_TEXT_MARKER = 0x01;
+		public static int META_TIME_SIG_MARKER = 0x58;
+		public static int META_TEMPO_MARKER = 0x51;
 		public static int SYSEX_MARKER = 0xF0;
 		public static boolean isMetaMarker(byte b) { return (b & 0xFF) == META_MARKER; }
 		public static boolean isTextMarker(byte b) { return (b & 0xFF) == META_TEXT_MARKER; }
 		public static boolean isSysexMarker(byte b) { return (b & 0xFF) == SYSEX_MARKER; }
+		public static boolean isTimeSigMarker(byte b) { return (b & 0xFF) == META_TIME_SIG_MARKER; }
+		public static boolean isTempoMarker(byte b) { return (b & 0xFF) == META_TEMPO_MARKER; }
+		
 		
 	}
 	VarLength time;
