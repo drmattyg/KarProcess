@@ -2,7 +2,7 @@ package com.drmattyg.nanokaraoke;
 
 import java.util.Iterator;
 
-public class TrackChunk implements Iterator<TrackEvent> {
+public class TrackChunk implements Iterable<TrackEvent> {
 
 
 	public MidiFile getParent() {
@@ -15,9 +15,6 @@ public class TrackChunk implements Iterator<TrackEvent> {
 
 	MidiFile parent;
 	int length;
-//	VarLength time;
-//	EventType eventType;
-//	int metaType;
 	int offset;
 	
 
@@ -44,26 +41,49 @@ public class TrackChunk implements Iterator<TrackEvent> {
 		return tc;
 	}
 	
+	
 	public int getTotalLength() { return length + 8; }
 
-	@Override
-	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	private int iteratorOffset;
+	int lastStatusByte = 0;
+	private int getLastStatusByte() { return lastStatusByte; }
+	private void setLastStatusByte(int b) { lastStatusByte = b; }
 
 	@Override
-	public TrackEvent next() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<TrackEvent> iterator() {
+		iteratorOffset = offset + 8;
+
+		final MidiFile mf = parent;
+		final TrackChunk tc = this;
+		return new Iterator<TrackEvent>() {
+
+			@Override
+			public boolean hasNext() {
+				return !TrackChunk.isTrackChunk(mf, iteratorOffset); // if this is the next track chunk, return false
+			}
+
+			@Override
+			public TrackEvent next() {
+				TrackEvent evt = TrackEvent.getInstance(tc, iteratorOffset);
+
+				if(evt.hasStatusbyte()) {
+					setLastStatusByte(evt.getStatusByte());
+				} else {
+					evt.setStatusByte(getLastStatusByte() & 0xff);
+				}
+				iteratorOffset += evt.getTotalLength();
+				return evt;
+			}
+
+			@Override
+			public void remove() {
+				// unimplemented
+				
+			}
+			
+		};
 	}
 
-	@Override
-	public void remove() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }
 
 

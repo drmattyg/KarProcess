@@ -5,7 +5,6 @@ import com.drmattyg.nanokaraoke.MidiFile.VarLength;
 
 public class TrackEvent {
 
-	
 	public static class Marker {
 		public static int META_MARKER = 0xFF;
 		public static int META_TEXT_MARKER = 0x01;
@@ -16,6 +15,7 @@ public class TrackEvent {
 		
 	}
 	VarLength time;
+	VarLength eventLength;
 	enum EventType {
 		Meta, Sysex, Midi;
 	}
@@ -23,37 +23,105 @@ public class TrackEvent {
 	private EventType eventType;
 	private int metaType;
 	private TrackChunk parent;
+	private int offset;
+	private boolean hasStatusByte;
+	private int statusByte;
+	public int getOffset() { return offset; }
+	public EventType getEventType() { return eventType; }
+	public VarLength getEventTime() { return time; }
+	public int getMetaType() { return metaType; }
+	
+	
+	// Even if this event has no status byte, TrackChunk.Iterator will set the status byte based on the previous status byte,
+	// based on the midi running status convention.  This is important because the current status byte determines the size
+	// of the midi event.  This means that hasStatusByte may return false, but getStatusByte may still return a valid status byte
+	public boolean hasStatusbyte() { return eventType == EventType.Midi && hasStatusByte; }
+	public int getStatusByte() { 
+		if(eventType != EventType.Midi) {
+			return 0;
+		} else {
+			return statusByte;
+		}
+	}
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta
 	public boolean isText() { return isMeta() && metaType == Marker.META_TEXT_MARKER; }
 	private TrackEvent() {}
 	public static TrackEvent getInstance(TrackChunk tc, int offset) {
 		TrackEvent te = new TrackEvent();
 		te.setParent(tc);
+		te.offset = offset;
 		int myOffset = offset;
-		byte[] b = tc.parent.getBytes();
+		byte[] b = tc.getParent().getBytes();
 		te.time = VarLength.read(b, myOffset);
 		myOffset += te.time.size;
 		if(Marker.isMetaMarker(b[myOffset])) {
 			te.eventType = EventType.Meta;
 			myOffset++;
 			te.metaType = b[myOffset] & 0xFF;
-			
+			myOffset++;
+			te.eventLength = VarLength.read(b, myOffset);
 			if(Marker.isTextMarker(b[myOffset])) {
-				
+				// TODO: implement this?
 			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {
 			te.eventType = EventType.Sysex;
+			myOffset += 2;
+			te.eventLength = VarLength.read(b, myOffset);
 		} else {
 			te.eventType = EventType.Midi;
+			if(isStatusByte(b[myOffset])) {
+				te.statusByte = b[myOffset];
+				te.hasStatusByte = true;
+			} else {
+				te.hasStatusByte = false;
+			}
 		} 
 		return te;
 		
 	}
+	
+	private byte[] getBytes() { return parent.getParent().getBytes(); }
+	private static boolean isStatusByte(byte b) { int b1 = b & 0xFF; return b1 >= 0x80 && b1 < 0xF0; }
+	public void setStatusByte(int b) { statusByte = b; }
+
+	public int getMidiEventSize() {
+		int meLength = 0;
+		if(hasStatusByte) {
+			meLength++;
+		}
+		if((statusByte & 0xC0) == 0xC0 || (statusByte & 0xD0) == 0xD0) {
+			meLength += 1;
+		} else {
+			meLength += 2;
+		}
+		return meLength;
+	}
+		
+	
+	public int getEventLength() {
+		switch(eventType) {
+			case Meta:
+				return eventLength.size + eventLength.value + 2; // 2 bytes for meta info, FF and meta type
+			case Midi:
+				return getMidiEventSize();
+			case Sysex:
+				return eventLength.size + eventLength.value + 1; // 1 byte for sysex info, F0 or F7
+			default:
+				return 0; // should never happen
+			
+		}
+	}
+	
+	
 	public TrackChunk getParent() {
 		return parent;
 	}
 	public void setParent(TrackChunk parent) {
 		this.parent = parent;
+	}
+	
+	public int getTotalLength() { 
+		return time.size + getEventLength();
 	}
 	
 	

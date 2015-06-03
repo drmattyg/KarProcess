@@ -17,7 +17,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 			v.value = 0;
 			for(int i = 0; i < b.length; i++) {
 				v.value = (v.value << 7) + (b[i + offset] & 0x7F);
-				if((b[i] & 0x80) == 0) {
+				if((b[i + offset] & 0x80) == 0) {
 					v.size = i + 1;
 					break;
 				}
