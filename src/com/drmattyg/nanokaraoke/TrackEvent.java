@@ -1,5 +1,6 @@
 package com.drmattyg.nanokaraoke;
 
+import com.drmattyg.nanokaraoke.MetaEventHandler.MetaEventType;
 import com.drmattyg.nanokaraoke.MidiFile.VarLength;
 
 
@@ -26,7 +27,7 @@ public class TrackEvent {
 	}
 	
 	private EventType eventType;
-	private int metaType;
+	private MetaEventType metaType;
 	private TrackChunk parent;
 	private int offset;
 	private boolean hasStatusByte;
@@ -35,7 +36,7 @@ public class TrackEvent {
 	public int getOffset() { return offset; }
 	public EventType getEventType() { return eventType; }
 	public VarLength getEventTime() { return time; }
-	public int getMetaType() { return metaType; }
+	public MetaEventType getMetaType() { return metaType; }
 	
 	
 	// Even if this event has no status byte, TrackChunk.Iterator will set the status byte based on the previous status byte,
@@ -50,7 +51,7 @@ public class TrackEvent {
 		}
 	}
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta
-	public boolean isText() { return isMeta() && metaType == Marker.META_TEXT_MARKER; }
+	public boolean isText() { return isMeta() && metaType == MetaEventType.TEXT; }
 	public TextEvent getTextEvent() { return isText() ? txt : null; }
 	private TrackEvent() {}
 	public static TrackEvent getInstance(TrackChunk tc, int offset) {
@@ -64,10 +65,11 @@ public class TrackEvent {
 		if(Marker.isMetaMarker(b[myOffset])) {
 			te.eventType = EventType.Meta;
 			myOffset++;
-			te.metaType = b[myOffset] & 0xFF;
+			te.metaType = MetaEventType.getType(b[myOffset] & 0xFF);
+			
 			myOffset++;
 			te.eventLength = VarLength.read(b, myOffset);
-			if(Marker.isTextMarker((byte)te.metaType)) {
+			if(te.isText()) {
 				te.txt = TextEvent.makeTextEvent(te);
 			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {

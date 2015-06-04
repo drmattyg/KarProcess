@@ -72,6 +72,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 					evt.setStatusByte(getLastStatusByte() & 0xff);
 				}
 				iteratorOffset += evt.getTotalLength();
+				if(evt.isMeta()) getParent().handleMetaEvents(evt); // TODO implement this
 				return evt;
 			}
 
