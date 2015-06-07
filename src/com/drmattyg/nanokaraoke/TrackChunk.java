@@ -1,6 +1,8 @@
 package com.drmattyg.nanokaraoke;
 
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class TrackChunk implements Iterable<TrackEvent> {
 
@@ -37,7 +39,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 
 		myOffset += 4;
 		tc.length = Utils.toInt(b, myOffset);
-
+		tc.parseTrackEvents(); // extract all the track events
 		return tc;
 	}
 	
@@ -48,9 +50,11 @@ public class TrackChunk implements Iterable<TrackEvent> {
 	int lastStatusByte = 0;
 	private int getLastStatusByte() { return lastStatusByte; }
 	private void setLastStatusByte(int b) { lastStatusByte = b; }
+	private Set<TrackEvent> eventSet = new TreeSet<TrackEvent>();
 
-	@Override
-	public Iterator<TrackEvent> iterator() {
+	// this is used for looping over the track events internally; externally we expose the TreeSet so 
+	// that we can add the absolute time offset to each TrackEvent before the user gets them
+	public Iterator<TrackEvent> privateIterator() {
 		iteratorOffset = offset + 8;
 
 		final MidiFile mf = parent;
@@ -72,7 +76,6 @@ public class TrackChunk implements Iterable<TrackEvent> {
 					evt.setStatusByte(getLastStatusByte() & 0xff);
 				}
 				iteratorOffset += evt.getTotalLength();
-				if(evt.isMeta()) getParent().handleMetaEvents(evt); // TODO implement this
 				return evt;
 			}
 
@@ -83,6 +86,21 @@ public class TrackChunk implements Iterable<TrackEvent> {
 			}
 			
 		};
+	}
+	
+	private void parseTrackEvents() {
+		Integer timeOffset = 0;
+		Iterator<TrackEvent> iterator = privateIterator();
+		while(iterator.hasNext()) {
+			TrackEvent te = iterator.next();
+			te.setTimeOffset(timeOffset + te.time.value);
+			eventSet.add(te);
+		}
+	}
+
+	@Override
+	public Iterator<TrackEvent> iterator() {
+		return eventSet.iterator();
 	}
 
 }

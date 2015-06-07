@@ -1,10 +1,10 @@
 package com.drmattyg.nanokaraoke;
 
-import com.drmattyg.nanokaraoke.MetaEventHandler.MetaEventType;
+import com.drmattyg.nanokaraoke.MidiEventHandler.MetaEventType;
 import com.drmattyg.nanokaraoke.MidiFile.VarLength;
 
 
-public class TrackEvent {
+public class TrackEvent implements Comparable<TrackEvent> {
 
 	public static class Marker {
 		public static int META_MARKER = 0xFF;
@@ -33,6 +33,7 @@ public class TrackEvent {
 	private boolean hasStatusByte;
 	private int statusByte;
 	private TextEvent txt = null;
+	private Integer timeOffset;
 	public int getOffset() { return offset; }
 	public EventType getEventType() { return eventType; }
 	public VarLength getEventTime() { return time; }
@@ -131,6 +132,16 @@ public class TrackEvent {
 	
 	public int getTotalLength() { 
 		return time.size + getEventLength();
+	}
+	public int getTimeOffset() {
+		return timeOffset;
+	}
+	public void setTimeOffset(int timeOffset) {
+		this.timeOffset = timeOffset;
+	}
+	@Override
+	public int compareTo(TrackEvent t) {
+		return this.timeOffset.compareTo(t.timeOffset);
 	}
 	
 	
