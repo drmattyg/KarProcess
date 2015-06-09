@@ -40,7 +40,8 @@ public class MidiFile implements Iterable<TrackChunk>{
 	byte[] bytes;
 	int offset;
 	HeaderChunk header;
-	public List<MetaEventHandler> metaEventHandlers = new ArrayList<MetaEventHandler>();
+	public List<MidiEventHandler> midiEventHandlers = new ArrayList<MidiEventHandler>();
+
 	private MidiFile(String s) {
 		Path path = Paths.get(s);
 		try {
@@ -90,14 +91,18 @@ public class MidiFile implements Iterable<TrackChunk>{
 		};
 	}
 	
-	public void registerMetaEventHandler(MetaEventHandler handler) {
-		metaEventHandlers.add(handler);
+	public void registerMetaEventHandler(MidiEventHandler handler) {
+		midiEventHandlers.add(handler);
 	}
-	public void handleMetaEvents(TrackEvent evt) {
-		for(MetaEventHandler h : metaEventHandlers) {
-			if(h.handlesEventType(evt.getMetaType())) h.handleEvent(evt);
+	private void handleEvents(TrackEvent evt) {
+		for(MidiEventHandler h : midiEventHandlers) {
+			h.handleEvent(evt);
 		}
 		
 	}
+
+	
+	
+	
 	
 }
