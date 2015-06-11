@@ -94,11 +94,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 					evt.setStatusByte(getLastStatusByte() & 0xff);
 				}
 				iteratorOffset += evt.getTotalLength();
-				
-				// pass the event to the event handlers
-				for(MidiEventHandler evtHandler : getParent().midiEventHandlers) {
-					evtHandler.handleEvent(evt);
-				}
+
 				return evt;
 			}
 
@@ -117,6 +113,10 @@ public class TrackChunk implements Iterable<TrackEvent> {
 		while (privateIterator.hasNext()) {
 			TrackEvent te = privateIterator.next();
 			te.setTimeOffset(timeOffset += te.time.value);
+			// pass the event to the event handlers
+			for(MidiEventHandler evtHandler : getParent().midiEventHandlers) {
+				evtHandler.handleEvent(te);
+			}
 			eventSet.add(te);
 		}
 	}

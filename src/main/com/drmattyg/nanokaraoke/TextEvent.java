@@ -2,12 +2,14 @@ package com.drmattyg.nanokaraoke;
 
 import com.drmattyg.nanokaraoke.MidiFile.VarLength;
 
-public class TextEvent  { // wrapper class for TrackEvent
+public class TextEvent  { 
 
 	protected TextEvent() { }
 	public String text;
 	TrackEvent te;
 	
+	
+	// should eventually refactor this to take advantage of the new features like getDataOffset
 	public static TextEvent makeTextEvent(TrackEvent te) {
 		if(!te.isText()) return null;
 		TextEvent txt = new TextEvent();

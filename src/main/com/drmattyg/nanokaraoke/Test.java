@@ -1,34 +1,20 @@
 package com.drmattyg.nanokaraoke;
 
+import java.util.Collections;
 
-
-
-
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 
 public class Test {
-	
+	public static String filename = "/Users/mgordon/Downloads/bridge_over_troubled_water_karaoke_songs_NifterDotCom.kar";
 	public static void main(String[] args) {
 		
-		MidiFile mf = MidiFile.createInstance("/Users/mgordon/Downloads/bridge_over_troubled_water_karaoke_songs_NifterDotCom.kar");
+		MidiFile mf = MidiFile.createInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
-// TODO: Tempo events!
 		int tcNum = 1;
-		for(TrackChunk tc : mf) {
-			System.out.println("Track chunk " + tcNum++);
-			int time = 0;
-			for(TrackEvent te: tc) {
-//				if(te.isText()) {
-					time = te.getTimeOffset();
-//					System.out.printf("%d: %s\n", time, te.getTextEvent().text);
-					System.out.printf("%d: %s\n", time, te.getEventType());
-					if(te.isMeta()) {
-						System.out.println("Type: " + te.getMetaType());
-					}
-//				}
-			}
-			
+		for(Integer time: MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets()) {
+			System.out.println(time + " : " + MidiEventHandlers.TEXT_HANDLER.getTextMap().get(time).toString());
 		}
-		
 		
 		
 

@@ -1,8 +1,11 @@
 package com.drmattyg.nanokaraoke;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MidiEventHandlers {
@@ -27,14 +30,20 @@ public class MidiEventHandlers {
 	}
 	
 	public static class TextHandler extends MidiEventHandler {
-		private Map<Integer, String> timeTextMap = new HashMap<Integer, String>();
+		private Map<Integer, TextEvent> lyricsMap = new HashMap<Integer, TextEvent>();
 		@Override
 		public void handleEvent(TrackEvent te) {
 			if(te.getMetaType() != MetaEventType.TEXT) return;
+			lyricsMap.put(te.getTimeOffset(), TextEvent.makeTextEvent(te));
 			
 		}
 		
-		public Map<Integer, String> getTextMap() { return timeTextMap; }
+		public Map<Integer, TextEvent> getTextMap() { return lyricsMap; }
+		public List<Integer> getSortedTimeOffsets() { 
+			List<Integer> r = new ArrayList<Integer>(lyricsMap.keySet());
+			Collections.sort(r);
+			return r;
+		}
 		
 	}
 	
