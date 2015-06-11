@@ -40,20 +40,24 @@ public class MidiFile implements Iterable<TrackChunk>{
 	byte[] bytes;
 	int offset;
 	HeaderChunk header;
-	public List<MidiEventHandler> midiEventHandlers = new ArrayList<MidiEventHandler>();
-
-	private MidiFile(String s) {
+	private List<TrackChunk> trackChunks = new ArrayList<TrackChunk>();
+	
+	private MidiFile() { };
+	public static MidiFile createInstance(String s) {
+		MidiFile mf = new  MidiFile();
 		Path path = Paths.get(s);
 		try {
-			bytes = Files.readAllBytes(path);
-			header = HeaderChunk.getInstance(this);
+			mf.bytes = Files.readAllBytes(path);
+			mf.header = HeaderChunk.getInstance(mf);
+			Iterator<TrackChunk> tcIterator = mf.privateIterator();
+			while(tcIterator.hasNext()) {
+				mf.trackChunks.add(tcIterator.next());
+			}
+			return mf;
 		} catch(IOException ex) {
 			ex.printStackTrace();
+			return null;
 		}
-		
-	}
-	public static MidiFile createInstance(String s) {
-		return new MidiFile(s);
 	}
 	
 	public byte[] getBytes() { return bytes; } // for testing
@@ -63,8 +67,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 
 	private int iteratorOffset;
 	
-	@Override
-	public Iterator<TrackChunk> iterator() {
+	public Iterator<TrackChunk> privateIterator() {
 		iteratorOffset = header.getTotalLength(); // this is always the header length
 		final MidiFile mf = this;
 		return new Iterator<TrackChunk>() {
@@ -90,16 +93,12 @@ public class MidiFile implements Iterable<TrackChunk>{
 			
 		};
 	}
+
+	@Override
+	public Iterator<TrackChunk> iterator() {
+		return trackChunks.iterator();
+	}
 	
-	public void registerMetaEventHandler(MidiEventHandler handler) {
-		midiEventHandlers.add(handler);
-	}
-	private void handleEvents(TrackEvent evt) {
-		for(MidiEventHandler h : midiEventHandlers) {
-			h.handleEvent(evt);
-		}
-		
-	}
 
 	
 	
