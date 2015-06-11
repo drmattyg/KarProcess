@@ -1,0 +1,14 @@
+apply plugin: "java"
+//apply plugin: "application"
+apply plugin: "eclipse"
+
+repositories {
+	mavenCentral()
+	maven {
+		url 'http://xuggle.googlecode.com/svn/trunk/repo/share/java/'
+	}
+}
+
+dependencies {
+	compile(group: 'xuggle', name: 'xuggle-xuggler', version: '5.4')
+}

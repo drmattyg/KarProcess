@@ -90,7 +90,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 		
 	}
 	
-	private byte[] getBytes() { return parent.getParent().getBytes(); }
+	public byte[] getBytes() { return parent.getParent().getBytes(); }
 	private static boolean isStatusByte(byte b) { int b1 = b & 0xFF; return b1 >= 0x80 && b1 < 0xF0; }
 	public void setStatusByte(int b) { statusByte = b; }
 
@@ -143,6 +143,16 @@ public class TrackEvent implements Comparable<TrackEvent> {
 	public int compareTo(TrackEvent t) {
 		return this.timeOffset.compareTo(t.timeOffset);
 	}
+
+// this isn't implemented universally so I can't use this
+//	public int getDataOffset() {
+//		return metaType.dataOffset + time.size;
+//	}
+	
+	public static int getDataOffset(TrackEvent evt) {
+		return evt.metaType.dataOffset + evt.time.size;
+	}
+	
 	
 	
 }
