@@ -94,6 +94,11 @@ public class TrackChunk implements Iterable<TrackEvent> {
 					evt.setStatusByte(getLastStatusByte() & 0xff);
 				}
 				iteratorOffset += evt.getTotalLength();
+				
+				// pass the event to the event handlers
+				for(MidiEventHandler evtHandler : getParent().midiEventHandlers) {
+					evtHandler.handleEvent(evt);
+				}
 				return evt;
 			}
 

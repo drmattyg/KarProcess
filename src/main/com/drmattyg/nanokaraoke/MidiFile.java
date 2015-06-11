@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 	int offset;
 	HeaderChunk header;
 	private List<TrackChunk> trackChunks = new ArrayList<TrackChunk>();
+	public Collection<MidiEventHandler> midiEventHandlers = MidiEventHandlers.DEFAULT_HANDLERS;  // going to let users manually handle this for now
 	
 	private MidiFile() { };
 	public static MidiFile createInstance(String s) {
