@@ -150,7 +150,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 //	}
 	
 	public static int getDataOffset(TrackEvent evt) {
-		return evt.metaType.dataOffset + evt.time.size;
+		return evt.offset + evt.metaType.dataOffset + evt.time.size;
 	}
 	
 	

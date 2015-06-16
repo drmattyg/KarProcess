@@ -8,8 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-
+//1 division = 1 dtu/qn
+//tempo = us/qn
+//
+//1 division / tempo = 1 dtu / qn * qn/us = dtu/us
+// 1 qn = division dtus; 1 qn = tempo us ; => division dtus = tempo us => dtu = division/tempo us; time = dtus * division/tempo
+//
 public class MidiFile implements Iterable<TrackChunk>{	
 	
 	public static class VarLength {
@@ -101,7 +105,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 		return trackChunks.iterator();
 	}
 	
-
+	
 	
 	
 	
