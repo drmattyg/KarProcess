@@ -14,10 +14,10 @@ public class VideoTest {
 	private static IRational tb = null;
 
 	static long startTime = 10000; // 10 seconds
-	static long duration = 15000; // 15 seconds
+	static long duration = 20000; // 15 seconds
 	public static void main(String[] args) {
 		IMediaReader mediaReader = ToolFactory.makeReader(videoFile);
-		VideoCutter vc = VideoCutter.getInstance(startTime, duration, output);
+		VideoCutter vc = VideoCutter.getInstance(startTime, duration, 5000, output);
 		vc.cutVideo(mediaReader);
 		
 	}
