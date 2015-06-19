@@ -17,16 +17,7 @@ public class Utils {
 			v = (v << 8) + (b[i] & 0xFF);
 		}
 		return v;
-//
-//		int val = 0;
-//		int mask = 0xff;
-//		int shiftVal = 0;
-//		for(int i = length - 1; i >= 0; i--) {
-//			val |= (b[offset + i] << shiftVal)&mask;
-//			mask = mask << 4;
-//			shiftVal = shiftVal + 8;
-//		}
-//		return val;
+
 	}
 	
 	public static String byteToString(byte[] b, int size, int offset) {
