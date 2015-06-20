@@ -7,9 +7,12 @@ import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.ToolFactory;
+import com.xuggle.mediatool.event.IAudioSamplesEvent;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
+import com.xuggle.xuggler.IAudioSamples;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IRational;
 import com.xuggle.xuggler.IStream;
 
 public class MediaTools {
@@ -68,20 +71,58 @@ public class MediaTools {
 			return mediaWriter;
 		}
 		
-		public static IMediaWriter makeVideoWriter(String input, String output, int streamId) {
-			IMediaWriter writer = ToolFactory.makeWriter(output);
-			IContainer vidContainer = IContainer.make();
-			vidContainer.open(input, IContainer.Type.READ, null);
-			IStream vidStream = null;
-			for(int i = 0; i < vidContainer.getNumStreams(); i++ ) {
-				if(vidContainer.getStream(i).getStreamCoder().getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
-					vidStream = vidContainer.getStream(i);
-					break;
-				}
-			}
-			writer.addVideoStream(0, 0,
-					vidStream.getStreamCoder().getWidth(), vidStream.getStreamCoder().getHeight());
-			return writer;
-		}
+
 	}	
+	
+	static class OverlayAudioTool extends MediaToolAdapter {
+
+		protected OverlayAudioTool() {}
+		private long startTime;
+		private IMediaWriter writer;
+		private int audioStreamId;
+		private static final IRational myBase = IRational.make(1, 1000); // millis
+		public static OverlayAudioTool getInstance(String audioFile, long startTimeOffset, IMediaWriter output, int audioStreamId) {
+			OverlayAudioTool oa = new OverlayAudioTool();
+			oa.startTime = startTimeOffset;
+			oa.writer = output;
+			oa.audioStreamId = audioStreamId;
+
+			return oa;
+		}
+		
+		@Override
+		public void onAudioSamples(IAudioSamplesEvent event) {
+			IAudioSamples s = event.getAudioSamples();
+			IRational tb = s.getTimeBase();
+			long timestamp = event.getTimeStamp() + tb.rescale(startTime, myBase);
+			s.setTimeStamp(timestamp);
+			writer.encodeAudio(audioStreamId, s);
+			super.onAudioSamples(event);
+		}
+	}
+	
+	public static void addAudioChannel(IMediaWriter writer, String audioFile, int streamId) {
+		IContainer auContainer = IContainer.make();
+		auContainer.open(audioFile, IContainer.Type.READ, null);
+		int numChannels = auContainer.getStream(0).getStreamCoder().getChannels();
+		int sampleRate = auContainer.getStream(0).getStreamCoder().getSampleRate();
+		writer.addAudioStream(streamId, streamId, numChannels, sampleRate);
+	}
+	
+	public static IMediaWriter makeVideoWriter(String input, String output, int streamId) {
+		IMediaWriter writer = ToolFactory.makeWriter(output);
+		IContainer vidContainer = IContainer.make();
+		vidContainer.open(input, IContainer.Type.READ, null);
+		IStream vidStream = null;
+		for(int i = 0; i < vidContainer.getNumStreams(); i++ ) {
+			if(vidContainer.getStream(i).getStreamCoder().getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
+				vidStream = vidContainer.getStream(i);
+				break;
+			}
+		}
+		writer.addVideoStream(0, 0,
+				vidStream.getStreamCoder().getWidth(), vidStream.getStreamCoder().getHeight());
+		return writer;
+	}
+	
 }
