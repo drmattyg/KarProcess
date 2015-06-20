@@ -6,7 +6,11 @@ import java.util.concurrent.TimeUnit;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.MediaToolAdapter;
+import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
+import com.xuggle.xuggler.ICodec;
+import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IStream;
 
 public class MediaTools {
 	
@@ -19,6 +23,7 @@ public class MediaTools {
 		protected long fadeTime;
 		protected boolean startVideo = false;
 		protected boolean endFade = false;
+		private int streamId;
 		public static VideoCutter getInstance(long startTimeMillis, long lengthMillis, IMediaWriter writer) {
 			VideoCutter vc = new VideoCutter();
 			vc.startTime = startTimeMillis;
@@ -55,11 +60,28 @@ public class MediaTools {
 			super.onVideoPicture(event);
 		}
 		
-		public void cutVideo(IMediaReader mediaReader) {
+		public IMediaWriter cutVideo(IMediaReader mediaReader, int streamId) {
+			this.streamId = streamId;
 			mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
 			mediaReader.addListener(this);
 			while (mediaReader.readPacket() == null);
-//			mediaWriter.close();
+			return mediaWriter;
+		}
+		
+		public static IMediaWriter makeVideoWriter(String input, String output, int streamId) {
+			IMediaWriter writer = ToolFactory.makeWriter(output);
+			IContainer vidContainer = IContainer.make();
+			vidContainer.open(input, IContainer.Type.READ, null);
+			IStream vidStream = null;
+			for(int i = 0; i < vidContainer.getNumStreams(); i++ ) {
+				if(vidContainer.getStream(i).getStreamCoder().getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
+					vidStream = vidContainer.getStream(i);
+					break;
+				}
+			}
+			writer.addVideoStream(0, 0,
+					vidStream.getStreamCoder().getWidth(), vidStream.getStreamCoder().getHeight());
+			return writer;
 		}
 	}	
 }
