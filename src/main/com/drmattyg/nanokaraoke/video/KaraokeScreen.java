@@ -17,13 +17,17 @@ import java.util.Map.Entry;
 
 public class KaraokeScreen {
 	
-	private static class KaraokeLine implements Iterable<Entry<Long, String>> {
+	public static class KaraokeLine implements Iterable<Entry<Long, String>> {
 		List<Entry<Long, String>> lyrics;
 		public static final int MAX_LINE_LENGTH = 50;
 		public static final String LINE_SCALER = "Take me to the river, drop me in the water. Drop me down. Abc"; // 60 letters.  Scaling is going to be approximate
 
 		@Override
 		public Iterator<Entry<Long, String>> iterator() { return lyrics.iterator(); }
+		
+		public KaraokeLine() {
+			lyrics = new ArrayList<Entry<Long, String>>();
+		}
 		
 		public KaraokeLine addLyric(long timestamp, String lyric) {
 			lyrics.add(new SimpleEntry<Long, String>(timestamp, lyric));
@@ -35,9 +39,12 @@ public class KaraokeScreen {
 			StringBuilder sb = new StringBuilder();
 			for(Entry<Long, String> entry : lyrics) {
 				sb.append(entry.getValue());
-				sb.append(" ");
 			}
 			return sb.toString().trim();
+		}
+		
+		public boolean isEmpty() {
+			return lyrics.isEmpty();
 		}
 		
 	}
@@ -94,8 +101,6 @@ public class KaraokeScreen {
 		s.drawLyrics("I am the very model of a modern major general", 1);
 		s.drawLyrics("I've information vegetable animal and mineral", 0);
 	}
-	
-	// TODO: Create a constructor that's going to be useful for working with 
 	
 	
 }
