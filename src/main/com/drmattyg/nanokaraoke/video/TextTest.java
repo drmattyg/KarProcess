@@ -15,7 +15,7 @@ public class TextTest {
 		try {
 			BufferedImage b = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
 			//TextUtils.drawOutlinedText(b, "My baloney has a first name", Color.BLACK, Color.CYAN, 200, 200, new Font("Helevetica", Font.BOLD, 48));
-			KaraokeScreen.test(b);
+//			KaraokeScreen.test(b);
 			JFrame f = new JFrame();
 			f.setSize(b.getWidth(), b.getHeight());
 			ImageIcon icon = new ImageIcon(b);

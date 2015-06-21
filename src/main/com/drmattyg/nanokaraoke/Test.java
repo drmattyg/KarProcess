@@ -34,7 +34,7 @@ public class Test {
 		try {
 			BufferedImage b1 = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
 			KaraokeScreen s = KaraokeScreen.getInstance(b1, lines);
-			BufferedImage b = s.render(5, 1, 1);
+			BufferedImage b = s.render(7, 0, 2);
 			JFrame f = new JFrame();
 			f.setSize(b.getWidth(), b.getHeight());
 			ImageIcon icon = new ImageIcon(b);

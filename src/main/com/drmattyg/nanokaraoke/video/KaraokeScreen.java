@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -78,8 +79,7 @@ public class KaraokeScreen {
 	
 	public void setFont(Font f) { font = new Font(f.getFontName(), f.getStyle(), f.getSize()); }
 	
-	private void drawText(String text, int lineNumber, Color fillColor) {
-		// draw line number from the bottom (0) up
+	public Point2D calculateOffset(String text, int lineNumber) {
 		int height = img.getHeight();
 		int width = img.getWidth();
 		Graphics2D g = img.createGraphics();
@@ -91,11 +91,21 @@ public class KaraokeScreen {
 		int th = g.getFontMetrics().getHeight();
 		int tw = g.getFontMetrics().stringWidth(text);
 		int y = height - (th + VERTICAL_PADDING)*(lineNumber + 1);
-		System.out.println(y);
-		System.out.println(height);
 		int x = Math.round((width - (tw + 2*HORIZONTAL_PADDING)*sf)/2);
-		g.translate(x, y);
-		g.scale(sf, sf);
+		return new Point2D.Float(x,  y);
+	}
+	
+	public float calculateScaleFactor(String text) {
+		Graphics2D g = img.createGraphics();
+		g.setFont(font);
+		float sf = img.getWidth()*1.0f/g.getFontMetrics().stringWidth(KaraokeLine.LINE_SCALER);
+		return sf;
+	}
+	
+	private void drawText(String text, Color fillColor, float scaleFactor, Point2D offset) {
+		Graphics2D g = img.createGraphics();
+		g.translate(offset.getX(), offset.getY());
+		g.scale(scaleFactor, scaleFactor);
 		TextLayout tl = new TextLayout(text, font, g.getFontRenderContext());
 		Shape shape = tl.getOutline(null);
 		g.setColor(fillColor);
@@ -107,20 +117,21 @@ public class KaraokeScreen {
 	}
 	
 	public BufferedImage render(int lineOffset, int currentLineNum, int lyricOffset) {
-		KaraokeLine kLine0 = lines.get(lineOffset + 1);
-		KaraokeLine kLine1 = lines.get(lineOffset);
-		drawText(kLine0.toString(), 0, Color.CYAN);
-		drawText(kLine1.toString(), 1, Color.CYAN);
-		KaraokeLine currentLine = currentLineNum == 0 ? kLine0 : kLine1;
-		drawText(currentLine.subString(lyricOffset), currentLineNum, Color.MAGENTA);
+		for(int i = 0; i < LINES_TO_RENDER; i++) {
+			KaraokeLine kLine = lines.get(lineOffset + (LINES_TO_RENDER - i - 1));
+			float scaleFactor = calculateScaleFactor(kLine.toString());
+			Point2D offset = calculateOffset(kLine.toString(), i);
+			drawText(kLine.toString(), Color.CYAN, scaleFactor, offset);
+			if(i == currentLineNum) {
+				String partial = kLine.subString(lyricOffset);
+				drawText(partial, Color.MAGENTA, scaleFactor, offset);
+			}
+		}
+
 		return img;
 	}
 	
-	public static void test(BufferedImage img) {
-		KaraokeScreen s = KaraokeScreen.getInstance(img, new ArrayList<KaraokeLine>());
-		s.drawText("I am the very model of a modern major general", 1, Color.CYAN);
-		s.drawText("I've information vegetable animal and mineral", 0, Color.CYAN);
-	}
+
 	
 	
 }
