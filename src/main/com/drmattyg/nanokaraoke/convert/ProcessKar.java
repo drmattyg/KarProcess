@@ -7,7 +7,6 @@ import java.util.List;
 import com.drmattyg.nanokaraoke.MidiFile;
 import com.drmattyg.nanokaraoke.TrackChunk;
 import com.drmattyg.nanokaraoke.TrackEvent;
-import com.drmattyg.nanokaraoke.video.KaraokeScreen;
 import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
 
 public class ProcessKar {

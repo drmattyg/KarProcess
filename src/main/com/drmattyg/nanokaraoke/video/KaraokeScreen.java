@@ -43,12 +43,25 @@ public class KaraokeScreen {
 			return sb.toString().trim();
 		}
 		
+		public String subString(int toOffset) {
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i <= toOffset; i++) {
+				sb.append(lyrics.get(i).getValue());
+			}
+			return sb.toString().trim();
+		}
+		
 		public boolean isEmpty() {
 			return lyrics.isEmpty();
 		}
 		
+		// the timeoffset at which this line starts
+		public long getTimeOffset() {
+			return lyrics.get(0).getKey();
+		}
+		
 	}
-	private List<KaraokeLine> lyrics;
+	private List<KaraokeLine> lines;
 	private BufferedImage img;
 	private static final int LINES_TO_RENDER = 2;
 	private static final int VERTICAL_PADDING = 10;
@@ -58,14 +71,14 @@ public class KaraokeScreen {
 	protected KaraokeScreen() {}
 	public static KaraokeScreen getInstance(BufferedImage img, List<KaraokeLine> lyrics) {
 		KaraokeScreen s = new KaraokeScreen();
-		s.lyrics = new ArrayList<KaraokeLine>(lyrics);
+		s.lines = new ArrayList<KaraokeLine>(lyrics);
 		s.img = img;
 		return s;
 	}
 	
 	public void setFont(Font f) { font = new Font(f.getFontName(), f.getStyle(), f.getSize()); }
 	
-	private void drawLyrics(String text, int lineNumber) {
+	private void drawText(String text, int lineNumber, Color fillColor) {
 		// draw line number from the bottom (0) up
 		int height = img.getHeight();
 		int width = img.getWidth();
@@ -81,25 +94,32 @@ public class KaraokeScreen {
 		System.out.println(y);
 		System.out.println(height);
 		int x = Math.round((width - (tw + 2*HORIZONTAL_PADDING)*sf)/2);
-		g.setColor(Color.CYAN);
 		g.translate(x, y);
 		g.scale(sf, sf);
 		TextLayout tl = new TextLayout(text, font, g.getFontRenderContext());
 		Shape shape = tl.getOutline(null);
-		g.setColor(Color.CYAN);
+		g.setColor(fillColor);
 		g.fill(shape);
 		g.setColor(Color.BLACK);
 		g.setStroke(new BasicStroke(STROKE_WIDTH));
 		g.draw(shape);
-					
-
 		
+	}
+	
+	public BufferedImage render(int lineOffset, int currentLineNum, int lyricOffset) {
+		KaraokeLine kLine0 = lines.get(lineOffset + 1);
+		KaraokeLine kLine1 = lines.get(lineOffset);
+		drawText(kLine0.toString(), 0, Color.CYAN);
+		drawText(kLine1.toString(), 1, Color.CYAN);
+		KaraokeLine currentLine = currentLineNum == 0 ? kLine0 : kLine1;
+		drawText(currentLine.subString(lyricOffset), currentLineNum, Color.MAGENTA);
+		return img;
 	}
 	
 	public static void test(BufferedImage img) {
 		KaraokeScreen s = KaraokeScreen.getInstance(img, new ArrayList<KaraokeLine>());
-		s.drawLyrics("I am the very model of a modern major general", 1);
-		s.drawLyrics("I've information vegetable animal and mineral", 0);
+		s.drawText("I am the very model of a modern major general", 1, Color.CYAN);
+		s.drawText("I've information vegetable animal and mineral", 0, Color.CYAN);
 	}
 	
 	

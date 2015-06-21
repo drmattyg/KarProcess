@@ -1,17 +1,25 @@
 package com.drmattyg.nanokaraoke;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import com.drmattyg.nanokaraoke.convert.ProcessKar;
+import com.drmattyg.nanokaraoke.video.KaraokeScreen;
 import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
 
 public class Test {
@@ -22,10 +30,24 @@ public class Test {
 
 		MidiFile mf = MidiFile.createInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
-		for(KaraokeLine kl : ProcessKar.extractKaraokeLines(mf)) {
-			System.out.println(kl);
+		List<KaraokeLine> lines = ProcessKar.extractKaraokeLines(mf);
+		try {
+			BufferedImage b1 = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
+			KaraokeScreen s = KaraokeScreen.getInstance(b1, lines);
+			BufferedImage b = s.render(5, 1, 1);
+			JFrame f = new JFrame();
+			f.setSize(b.getWidth(), b.getHeight());
+			ImageIcon icon = new ImageIcon(b);
+			JLabel l = new JLabel(icon);
+			JPanel p = new JPanel();
+			p.add(l);
+			f.add(p);
+
+			f.setVisible(true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
 	}
 
 	public static void playFile(String fn) {
