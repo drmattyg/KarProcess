@@ -15,7 +15,6 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IRational;
 import com.xuggle.xuggler.IStream;
-import com.xuggle.xuggler.IStreamCoder;
 
 public class MediaTools {
 	
@@ -141,6 +140,13 @@ public class MediaTools {
 		IMediaWriter writer = ToolFactory.makeWriter(output);
 		writer.addVideoStream(streamId, streamId, codec, width, height);
 		return writer;
+	}
+	
+	
+	// Supplies a default available MP4 encoder
+	public static IMediaWriter makeVideoWriter(String output, int width, int height, int streamId) {
+		ICodec codec = ICodec.findEncodingCodecByName("mpeg4");
+		return makeVideoWriter(output, codec, width, height, streamId);
 	}
 	
 	public static IStream getVideoStream(String input) {
