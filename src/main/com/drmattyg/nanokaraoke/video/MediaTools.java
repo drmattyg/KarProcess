@@ -1,6 +1,7 @@
 package com.drmattyg.nanokaraoke.video;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.xuggle.mediatool.IMediaReader;
@@ -72,7 +73,23 @@ public class MediaTools {
 			return mediaWriter;
 		}
 		
-		// add a new function here that will let us cut video with intermediate tool adapters
+		public IMediaWriter cutVideo(IMediaReader mediaReader, List<? extends MediaToolAdapter> filters, int streamId) {
+			if(filters.isEmpty()) {
+				return cutVideo(mediaReader, streamId);
+			}
+			this.streamId = streamId;
+			mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
+
+			MediaToolAdapter last = filters.get(0);
+			mediaReader.addListener(last);
+			for(int i = 1; i < filters.size(); i++) {
+				last.addListener(filters.get(i));
+				last = filters.get(i);
+			}
+			while (mediaReader.readPacket() == null);
+			return mediaWriter;
+			
+		}
 		
 
 	}	
