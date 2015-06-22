@@ -40,7 +40,7 @@ public class ProcessKar {
 		return s.startsWith("/") || s.startsWith("\\");
 	}
 	
-	public static List<KaraokeLine> extractKaraokeLines(MidiFile mf) {
+	public static List<KaraokeLine> toKaraokeLines(MidiFile mf) {
 		List<KaraokeLine> lines = new ArrayList<KaraokeLine>();
 		KaraokeLine kLine = new KaraokeLine();
 		for(TrackChunk tc : mf) {

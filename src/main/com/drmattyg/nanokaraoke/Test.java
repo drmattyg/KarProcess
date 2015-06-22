@@ -30,7 +30,7 @@ public class Test {
 
 		MidiFile mf = MidiFile.createInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
-		List<KaraokeLine> lines = ProcessKar.extractKaraokeLines(mf);
+		List<KaraokeLine> lines = ProcessKar.toKaraokeLines(mf);
 		try {
 			BufferedImage b1 = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
 			KaraokeScreen s = KaraokeScreen.getInstance(b1, lines);

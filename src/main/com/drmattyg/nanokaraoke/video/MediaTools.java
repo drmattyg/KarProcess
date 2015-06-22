@@ -14,6 +14,7 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IRational;
 import com.xuggle.xuggler.IStream;
+import com.xuggle.xuggler.IStreamCoder;
 
 public class MediaTools {
 	
@@ -71,6 +72,8 @@ public class MediaTools {
 			return mediaWriter;
 		}
 		
+		// add a new function here that will let us cut video with intermediate tool adapters
+		
 
 	}	
 	
@@ -111,6 +114,19 @@ public class MediaTools {
 	
 	public static IMediaWriter makeVideoWriter(String input, String output, int streamId) {
 		IMediaWriter writer = ToolFactory.makeWriter(output);
+		IStream vidStream = getVideoStream(input);
+		writer.addVideoStream(streamId, streamId,
+				vidStream.getStreamCoder().getWidth(), vidStream.getStreamCoder().getHeight());
+		return writer;
+	}
+	
+	public static IMediaWriter makeVideoWriter(String output, ICodec codec, int width, int height, int streamId) {
+		IMediaWriter writer = ToolFactory.makeWriter(output);
+		writer.addVideoStream(streamId, streamId, codec, width, height);
+		return writer;
+	}
+	
+	public static IStream getVideoStream(String input) {
 		IContainer vidContainer = IContainer.make();
 		vidContainer.open(input, IContainer.Type.READ, null);
 		IStream vidStream = null;
@@ -120,9 +136,7 @@ public class MediaTools {
 				break;
 			}
 		}
-		writer.addVideoStream(0, 0,
-				vidStream.getStreamCoder().getWidth(), vidStream.getStreamCoder().getHeight());
-		return writer;
+		return vidStream;
 	}
 	
 }
