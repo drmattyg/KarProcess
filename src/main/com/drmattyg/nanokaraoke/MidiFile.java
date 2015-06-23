@@ -49,7 +49,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 	public Collection<MidiEventHandler> midiEventHandlers = MidiEventHandlers.DEFAULT_HANDLERS;  // going to let users manually handle this for now
 	
 	private MidiFile() { };
-	public static MidiFile createInstance(String s) {
+	public static MidiFile getInstance(String s) {
 		MidiFile mf = new  MidiFile();
 		Path path = Paths.get(s);
 		try {

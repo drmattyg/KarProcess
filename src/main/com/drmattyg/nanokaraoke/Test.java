@@ -35,7 +35,7 @@ public class Test {
 			e1.printStackTrace();
 		}
 		System.exit(0);
-		MidiFile mf = MidiFile.createInstance(filename);
+		MidiFile mf = MidiFile.getInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
 		List<KaraokeLine> lines = ProcessKar.toKaraokeLines(mf);
 		try {
