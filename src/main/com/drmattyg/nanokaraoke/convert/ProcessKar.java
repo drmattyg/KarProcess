@@ -1,6 +1,7 @@
 package com.drmattyg.nanokaraoke.convert;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +11,23 @@ import com.drmattyg.nanokaraoke.TrackEvent;
 import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
 
 public class ProcessKar {
-	public static void generateKarVideo(String videoFile, String midiFile, int startTime) {
+	
+	private static class ConversionFailureException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		public ConversionFailureException(String string) {
+			super(string);
+		}
+		
+	}
+	public static void generateKarVideo(String videoFile, String midiFile, int startTime) throws Exception {
+		MidiFile mf = MidiFile.getInstance(midiFile);
+		File wf = karToWav(midiFile);
 		
 	}
 	
-	public static File karToWav(String filename) throws Exception {
+	public static File karToWav(String filename) throws IOException, ConversionFailureException {
 		String timidity = System.getProperty("timidity.exec");
 		if(timidity == null) {
 			throw new IllegalArgumentException("timidity.exec property must be specified");
@@ -32,32 +45,16 @@ public class ProcessKar {
 		tempFile.delete();
 		String command = timidity + " -Ow -o " + tempFilename + " " + filename;
 		Process p = Runtime.getRuntime().exec(command);
-		p.waitFor();
-		if(p.exitValue() != 0) throw new Exception("Timidity failed: " + p.getOutputStream());
+		while(true) {
+			try {
+				p.waitFor();
+				break;
+			} catch (InterruptedException e) {}
+		}
+		if(p.exitValue() != 0) throw new ConversionFailureException("Timidity failed: " + p.getOutputStream());
 		return new File(tempFile.getPath());
 	}
 	
-	private static boolean isLineStart(String s) {
-		return s.startsWith("/") || s.startsWith("\\");
-	}
-	
-	public static List<KaraokeLine> toKaraokeLines(MidiFile mf) {
-		List<KaraokeLine> lines = new ArrayList<KaraokeLine>();
-		KaraokeLine kLine = new KaraokeLine();
-		for(TrackChunk tc : mf) {
-			for(TrackEvent te : tc) {
-				if(te.isText() && te.getTimeOffset() > 0) {
-					String text = te.getTextEvent().toString();
-					if(isLineStart(text)) {
-						if(!kLine.isEmpty()) lines.add(kLine);
-						kLine = new KaraokeLine();
-					}
-					kLine.addLyric(te.getTimeOffset(), text.replaceAll("^[/\\\\]", ""));
-				}
-			}
-		}
-		return lines;
-	}
 	
 	
 }

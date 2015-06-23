@@ -37,7 +37,7 @@ public class Test {
 		System.exit(0);
 		MidiFile mf = MidiFile.getInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
-		List<KaraokeLine> lines = ProcessKar.toKaraokeLines(mf);
+		List<KaraokeLine> lines = KaraokeLine.toKaraokeLines(mf);
 		try {
 			BufferedImage b1 = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
 			KaraokeScreen s = KaraokeScreen.getInstance(b1, lines);

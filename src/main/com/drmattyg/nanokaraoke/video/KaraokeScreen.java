@@ -16,6 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.drmattyg.nanokaraoke.MidiFile;
+import com.drmattyg.nanokaraoke.TrackChunk;
+import com.drmattyg.nanokaraoke.TrackEvent;
+
 public class KaraokeScreen {
 	
 	public static class KaraokeLine implements Iterable<Entry<Long, String>> {
@@ -59,6 +63,28 @@ public class KaraokeScreen {
 		// the timeoffset at which this line starts
 		public long getTimeOffset() {
 			return lyrics.get(0).getKey();
+		}
+		
+		private static boolean isLineStart(String s) {
+			return s.startsWith("/") || s.startsWith("\\");
+		}
+		
+		public static List<KaraokeLine> toKaraokeLines(MidiFile mf) {
+			List<KaraokeLine> lines = new ArrayList<KaraokeLine>();
+			KaraokeLine kLine = new KaraokeLine();
+			for(TrackChunk tc : mf) {
+				for(TrackEvent te : tc) {
+					if(te.isText() && te.getTimeOffset() > 0) {
+						String text = te.getTextEvent().toString();
+						if(isLineStart(text)) {
+							if(!kLine.isEmpty()) lines.add(kLine);
+							kLine = new KaraokeLine();
+						}
+						kLine.addLyric(te.getTimeOffset(), text.replaceAll("^[/\\\\]", ""));
+					}
+				}
+			}
+			return lines;
 		}
 		
 	}
