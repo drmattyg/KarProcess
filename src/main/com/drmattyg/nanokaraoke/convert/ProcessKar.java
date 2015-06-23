@@ -10,18 +10,18 @@ import com.drmattyg.nanokaraoke.TrackEvent;
 import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
 
 public class ProcessKar {
-	public static void main(String[] args) {
-
+	public static void generateKarVideo(String videoFile, String midiFile, int startTime) {
+		
 	}
 	
 	public static File karToWav(String filename) throws Exception {
-		String timidity = System.getProperty("TIMIDITY");
+		String timidity = System.getProperty("timidity.exec");
 		if(timidity == null) {
-			throw new IllegalArgumentException("TIMIDITY property must be specified");
+			throw new IllegalArgumentException("timidity.exec property must be specified");
 		}
 		File tf = new File(timidity);
 		if(!tf.exists() || !tf.isFile() || !tf.canExecute()) {
-			throw new IllegalArgumentException("TIMIDITY must specify the timidity executable");
+			throw new IllegalArgumentException("timidity.exec must specify the timidity executable");
 		}
 		File karFile = new File(filename);
 		if(!karFile.exists() || !karFile.isFile() || !karFile.canRead()) {
@@ -32,6 +32,7 @@ public class ProcessKar {
 		tempFile.delete();
 		String command = timidity + " -Ow -o " + tempFilename + " " + filename;
 		Process p = Runtime.getRuntime().exec(command);
+		p.waitFor();
 		if(p.exitValue() != 0) throw new Exception("Timidity failed: " + p.getOutputStream());
 		return new File(tempFile.getPath());
 	}

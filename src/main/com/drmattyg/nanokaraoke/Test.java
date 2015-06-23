@@ -27,7 +27,14 @@ public class Test {
 	public static String videoFile = "/Users/mgordon/test/tb.mp4";
 	public static String output = "/Users/mgordon/test/tb_out.mp4";
 	public static void main(String[] args) {
-
+		try {
+			File f = ProcessKar.karToWav(filename);
+			System.out.println(f.getAbsolutePath());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.exit(0);
 		MidiFile mf = MidiFile.createInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
 		List<KaraokeLine> lines = ProcessKar.toKaraokeLines(mf);
