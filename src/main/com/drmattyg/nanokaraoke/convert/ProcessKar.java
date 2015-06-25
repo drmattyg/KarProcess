@@ -2,14 +2,19 @@ package com.drmattyg.nanokaraoke.convert;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
 import com.drmattyg.nanokaraoke.MidiFile;
+import com.drmattyg.nanokaraoke.video.KaraokeScreenMediaTool;
 import com.drmattyg.nanokaraoke.video.MediaTools;
+import com.drmattyg.nanokaraoke.video.MediaTools.VideoCutter;
+import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
+import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
 
 public class ProcessKar {
-	
+	private static final long FADE_TIME = 5000;
 	private static class ConversionFailureException extends Exception {
 
 		private static final long serialVersionUID = 1L;
@@ -22,10 +27,14 @@ public class ProcessKar {
 	public static void generateKarVideo(String videoFile, String midiFile, int startTime, String output) throws Exception {
 		MidiFile mf = MidiFile.getInstance(midiFile);
 		File wf = karToWav(midiFile);
-	
+		long wavFileDuration = MediaTools.getWavFileDuration(wf);
 		IMediaWriter writer = MediaTools.makeVideoWriter(videoFile, output, MediaTools.OUTPUT_VIDEO_STREAM_ID);
-		
-
+		MediaTools.addAudioChannel(writer, wf.getPath(), MediaTools.OUTPUT_AUDIO_STREAM_ID);
+		VideoCutter vc = VideoCutter.getInstance(startTime, wavFileDuration + FADE_TIME*2, FADE_TIME, writer);
+		IMediaReader vidReader = ToolFactory.makeReader(videoFile);
+		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, FADE_TIME);
+		vc.cutVideo(vidReader, Collections.singletonList(ks), MediaTools.OUTPUT_VIDEO_STREAM_ID);
+		writer.close();
 		
 	}
 	

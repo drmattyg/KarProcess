@@ -16,7 +16,7 @@ public class AudioFileLength {
 	@Test
 	public void test() {
 		System.out.println(System.getProperty("user.dir"));
-		File f = new File("src/main/resources/bridge.wav");
+		File f = new File("src/test/resources/bridge.wav");
 		assertTrue(f.exists() && f.canRead());
 		try { 
 			assertTrue(MediaTools.getWavFileDuration(f) > 0);

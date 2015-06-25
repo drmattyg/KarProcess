@@ -9,13 +9,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.drmattyg.nanokaraoke.MidiFile;
+
 public class TextTest {
 
+	private static String IMAGE_FILE = "src/test/resources/cheetahs.jpg";
+	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
 	public static void main(String[] args) {
 		try {
-			BufferedImage b = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
-			//TextUtils.drawOutlinedText(b, "My baloney has a first name", Color.BLACK, Color.CYAN, 200, 200, new Font("Helevetica", Font.BOLD, 48));
-//			KaraokeScreen.test(b);
+			BufferedImage img = ImageIO.read(new File(IMAGE_FILE));
+			MidiFile mf = MidiFile.getInstance(MIDI_FILE);
+			KaraokeScreen sc = KaraokeScreen.getInstance(img, KaraokeLine.toKaraokeLines(mf), 4, 5, 2);
+			System.out.println(KaraokeLine.toKaraokeLines(mf).get(5).lyrics);
+			BufferedImage b = sc.render();
 			JFrame f = new JFrame();
 			f.setSize(b.getWidth(), b.getHeight());
 			ImageIcon icon = new ImageIcon(b);
@@ -23,7 +29,6 @@ public class TextTest {
 			JPanel p = new JPanel();
 			p.add(l);
 			f.add(p);
-
 			f.setVisible(true);
 		} catch(Exception ex) {
 			ex.printStackTrace();

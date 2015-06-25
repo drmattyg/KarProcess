@@ -28,12 +28,20 @@ public class KaraokeScreen {
 	private static final int VERTICAL_PADDING = 10;
 	private static final int HORIZONTAL_PADDING = 20;
 	private static final float STROKE_WIDTH = 3; 
+	private static final Color SUNG_COLOR = Color.CYAN;
+	private static final Color UNSUNG_COLOR = Color.MAGENTA;
 	private Font font = new Font("Verdana", Font.BOLD, 48);
+	private int topLineIndex;
+	private int currentLineIndex;
+	private int lyricOffset;
 	protected KaraokeScreen() {}
-	public static KaraokeScreen getInstance(BufferedImage img, List<KaraokeLine> lyrics) {
+	public static KaraokeScreen getInstance(BufferedImage img, List<KaraokeLine> lyrics, int topLineIndex, int currentLineIndex, int lyricOffset) {
 		KaraokeScreen s = new KaraokeScreen();
 		s.lines = new ArrayList<KaraokeLine>(lyrics);
 		s.img = img;
+		s.topLineIndex = topLineIndex;
+		s.currentLineIndex = currentLineIndex;
+		s.lyricOffset = lyricOffset;
 		return s;
 	}
 	
@@ -76,15 +84,21 @@ public class KaraokeScreen {
 		
 	}
 	
-	public BufferedImage render(int lineOffset, int currentLineNum, int lyricOffset) {
-		for(int i = 0; i < LINES_TO_RENDER; i++) {
-			KaraokeLine kLine = lines.get(lineOffset + (LINES_TO_RENDER - i - 1));
+	public BufferedImage render() {
+		for(int i = topLineIndex; i < topLineIndex + LINES_TO_RENDER; i++) {
+			KaraokeLine kLine = lines.get(i);
 			float scaleFactor = calculateScaleFactor(kLine.toString());
-			Point2D offset = calculateOffset(kLine.toString(), i);
-			drawText(kLine.toString(), Color.CYAN, scaleFactor, offset);
-			if(i == currentLineNum) {
+			Point2D offset = calculateOffset(kLine.toString(), topLineIndex + LINES_TO_RENDER - i);
+			Color lineColor;
+			if(i <= currentLineIndex) {
+				lineColor = UNSUNG_COLOR;
+			} else {
+				lineColor = SUNG_COLOR;
+			}
+			drawText(kLine.toString(), lineColor, scaleFactor, offset);
+			if(i == currentLineIndex) {
 				String partial = kLine.subString(lyricOffset);
-				drawText(partial, Color.MAGENTA, scaleFactor, offset);
+				drawText(partial, SUNG_COLOR, scaleFactor, offset);
 			}
 		}
 

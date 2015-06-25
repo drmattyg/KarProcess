@@ -38,23 +38,7 @@ public class Test {
 		MidiFile mf = MidiFile.getInstance(filename);
 		HeaderChunk h = mf.getHeaderChunk();
 		List<KaraokeLine> lines = KaraokeLine.toKaraokeLines(mf);
-		try {
-			BufferedImage b1 = ImageIO.read(new File("/Users/mgordon/test/cheetahs.jpg"));
-			KaraokeScreen s = KaraokeScreen.getInstance(b1, lines);
-			BufferedImage b = s.render(7, 0, 2);
-			JFrame f = new JFrame();
-			f.setSize(b.getWidth(), b.getHeight());
-			ImageIcon icon = new ImageIcon(b);
-			JLabel l = new JLabel(icon);
-			JPanel p = new JPanel();
-			p.add(l);
-			f.add(p);
-
-			f.setVisible(true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 	}
 
 	public static void playFile(String fn) {

@@ -3,6 +3,7 @@ package com.drmattyg.nanokaraoke.video;
 import java.util.Collections;
 import java.util.List;
 
+import com.drmattyg.nanokaraoke.convert.ProcessKar;
 import com.drmattyg.nanokaraoke.video.MediaTools.OverlayAudioTool;
 import com.drmattyg.nanokaraoke.video.MediaTools.VideoCutter;
 import com.xuggle.mediatool.IMediaReader;
@@ -16,6 +17,10 @@ public class VideoTest {
 	public static String videoFile = "/Users/mgordon/test/tb.mp4";
 	public static String output = "/Users/mgordon/test/tb_out.mp4";
 	public static String audio = "/Library/Java/Demos/Sound/JavaSoundDemo/audio/1-welcome.wav";
+
+	private static final String VIDEO_FILE = "src/main/resources/tommyboy.mp4";
+	private static final String OUTPUT_FILE = "test_output/output.mp4";
+	private static final String MIDI_FILE = "src/main/resources/bridge_over_troubled_water.kar";
 	static final int VIDEO_STREAM_ID = 0;
 	private static final int AUDIO_STREAM_ID = 1;
 
@@ -25,6 +30,13 @@ public class VideoTest {
 	static long startTime = 10000; // 10 seconds
 	static long duration = 40000; // 15 seconds
 	public static void main(String[] args) {
+		try {
+			ProcessKar.generateKarVideo(VIDEO_FILE, MIDI_FILE, 10, OUTPUT_FILE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
 //		// test scaling down video
 //		IStream vidStream = MediaTools.getVideoStream("/Users/mgordon/Downloads/star_wars_7_the_force_awakens-teaser2/Star Wars Episode VII - The Force Awakens - Teaser Trailer 2.mp4");
 //		int targetWidth = 720;
