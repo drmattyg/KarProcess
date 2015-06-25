@@ -1,8 +1,15 @@
 package com.drmattyg.nanokaraoke.video;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
@@ -17,7 +24,8 @@ import com.xuggle.xuggler.IRational;
 import com.xuggle.xuggler.IStream;
 
 public class MediaTools {
-	
+	public static final int OUTPUT_VIDEO_STREAM_ID = 0;
+	public static final int OUTPUT_AUDIO_STREAM_ID = 1;	
 	public static class VideoCutter extends MediaToolAdapter {
 
 		protected VideoCutter() {};
@@ -28,6 +36,7 @@ public class MediaTools {
 		protected boolean startVideo = false;
 		protected boolean endFade = false;
 		private int streamId;
+
 		public static VideoCutter getInstance(long startTimeMillis, long lengthMillis, IMediaWriter writer) {
 			VideoCutter vc = new VideoCutter();
 			vc.startTime = startTimeMillis;
@@ -160,6 +169,17 @@ public class MediaTools {
 			}
 		}
 		return vidStream;
+	}
+	
+	
+	public static long getWavFileDuration(File wavFile) throws UnsupportedAudioFileException, IOException {
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(wavFile);
+	    AudioFormat format = audioInputStream.getFormat();
+	    long audioFileLength = wavFile.length();
+	    int frameSize = format.getFrameSize();
+	    float frameRate = format.getFrameRate();
+	    float durationInMillis = (audioFileLength / (frameSize * frameRate))*1000;
+	    return (long)Math.ceil(durationInMillis);
 	}
 	
 }

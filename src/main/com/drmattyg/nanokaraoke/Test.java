@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 import com.drmattyg.nanokaraoke.convert.ProcessKar;
 import com.drmattyg.nanokaraoke.video.KaraokeScreen;
-import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
+import com.drmattyg.nanokaraoke.video.KaraokeLine;
 
 public class Test {
 	public static String filename = "/Users/mgordon/Downloads/bridge_over_troubled_water_karaoke_songs_NifterDotCom.kar";

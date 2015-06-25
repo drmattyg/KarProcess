@@ -1,7 +1,6 @@
 package com.drmattyg.nanokaraoke.video;
 
 import com.xuggle.mediatool.MediaToolAdapter;
-import com.xuggle.mediatool.event.IAudioSamplesEvent;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
 import com.xuggle.mediatool.event.VideoPictureEvent;
 import com.xuggle.xuggler.IStream;

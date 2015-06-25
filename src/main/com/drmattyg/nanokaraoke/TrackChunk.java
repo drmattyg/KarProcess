@@ -112,6 +112,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 		Iterator<TrackEvent> privateIterator = privateIterator();
 		while (privateIterator.hasNext()) {
 			TrackEvent te = privateIterator.next();
+			// note that this only works if the tempo never changes!  Need to fix this for future ref
 			te.setTimeOffset(timeOffset += te.time.value);
 			// pass the event to the event handlers
 			for(MidiEventHandler evtHandler : getParent().midiEventHandlers) {

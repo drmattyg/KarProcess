@@ -2,13 +2,11 @@ package com.drmattyg.nanokaraoke.convert;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.drmattyg.nanokaraoke.MidiFile;
-import com.drmattyg.nanokaraoke.TrackChunk;
-import com.drmattyg.nanokaraoke.TrackEvent;
-import com.drmattyg.nanokaraoke.video.KaraokeScreen.KaraokeLine;
+import com.drmattyg.nanokaraoke.video.MediaTools;
+import com.xuggle.mediatool.IMediaWriter;
+import com.xuggle.xuggler.ICodec;
 
 public class ProcessKar {
 	
@@ -21,9 +19,13 @@ public class ProcessKar {
 		}
 		
 	}
-	public static void generateKarVideo(String videoFile, String midiFile, int startTime) throws Exception {
+	public static void generateKarVideo(String videoFile, String midiFile, int startTime, String output) throws Exception {
 		MidiFile mf = MidiFile.getInstance(midiFile);
 		File wf = karToWav(midiFile);
+	
+		IMediaWriter writer = MediaTools.makeVideoWriter(videoFile, output, MediaTools.OUTPUT_VIDEO_STREAM_ID);
+		
+
 		
 	}
 	

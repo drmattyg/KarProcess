@@ -20,4 +20,6 @@ public class HeaderChunk {
 		division = Utils.toInt(bytes, 2, 12);
 	}
 	public int getTotalLength() { return length + 8; } // this should always return 14
+	
+	
 }

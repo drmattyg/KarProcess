@@ -10,7 +10,7 @@ import com.drmattyg.nanokaraoke.MidiFile;
 import com.drmattyg.nanokaraoke.TrackChunk;
 import com.drmattyg.nanokaraoke.TrackEvent;
 
-class KaraokeLine implements Iterable<Entry<Long, String>> {
+public class KaraokeLine implements Iterable<Entry<Long, String>> {
 	List<Entry<Long, String>> lyrics;
 	public static final int MAX_LINE_LENGTH = 50;
 	public static final String LINE_SCALER = "Take me to the river, drop me in the water. Drop me down. Abc"; // 60 letters.  Scaling is going to be approximate
