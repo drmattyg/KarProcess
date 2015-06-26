@@ -69,7 +69,6 @@ public class MediaTools {
 					img = ImageUtils.fade(img, fadePercent);
 				} else if (timestamp > tStart + duration - fadeTime) {
 					float fadePercent = 1 - (timestamp - (tStart + duration - fadeTime))*1.0f/fadeTime;
-					System.out.println(fadePercent);
 					img = ImageUtils.fade(img, fadePercent);
 				} else if(startVideo) endFade = true;
 				
@@ -107,7 +106,7 @@ public class MediaTools {
 
 	}	
 	
-	static class OverlayAudioTool extends MediaToolAdapter {
+	public static class OverlayAudioTool extends MediaToolAdapter {
 
 		protected OverlayAudioTool() {}
 		private long startTime;
