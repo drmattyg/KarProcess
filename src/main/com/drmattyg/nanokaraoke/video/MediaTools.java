@@ -36,6 +36,7 @@ public class MediaTools {
 		protected boolean startVideo = false;
 		protected boolean endFade = false;
 		private int streamId;
+		private static long t0 = -1;
 
 		public static VideoCutter getInstance(long startTimeMillis, long lengthMillis, IMediaWriter writer) {
 			VideoCutter vc = new VideoCutter();
@@ -56,15 +57,19 @@ public class MediaTools {
 		
 		@Override
 		public void onVideoPicture(IVideoPictureEvent event) {
+
 			long timestamp = event.getTimeStamp(TimeUnit.MILLISECONDS);
-			if(timestamp > startTime && timestamp < (startTime + duration)) {
+			if(t0 < 0) t0 = timestamp;
+			long tStart = t0 + startTime;
+			if(timestamp > tStart && timestamp < (tStart + duration)) {
 				BufferedImage img = event.getImage();
-				if(timestamp < startTime + fadeTime) {
+				if(timestamp < tStart + fadeTime) {
 					startVideo = true;
-					float fadePercent = (timestamp - startTime)*1.0f/fadeTime;
+					float fadePercent = (timestamp - tStart)*1.0f/fadeTime;
 					img = ImageUtils.fade(img, fadePercent);
-				} else if (timestamp > startTime + duration - fadeTime) {
-					float fadePercent = (duration - (timestamp - startTime))*1f/fadeTime;
+				} else if (timestamp > tStart + duration - fadeTime) {
+					float fadePercent = 1 - (timestamp - (tStart + duration - fadeTime))*1.0f/fadeTime;
+					System.out.println(fadePercent);
 					img = ImageUtils.fade(img, fadePercent);
 				} else if(startVideo) endFade = true;
 				

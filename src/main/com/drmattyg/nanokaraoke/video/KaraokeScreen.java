@@ -24,7 +24,7 @@ public class KaraokeScreen {
 	
 	private List<KaraokeLine> lines;
 	private BufferedImage img;
-	private static final int LINES_TO_RENDER = 2;
+	public static final int LINES_TO_RENDER = 2;
 	private static final int VERTICAL_PADDING = 10;
 	private static final int HORIZONTAL_PADDING = 20;
 	private static final float STROKE_WIDTH = 3; 

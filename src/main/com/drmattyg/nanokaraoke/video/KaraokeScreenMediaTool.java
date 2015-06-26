@@ -16,6 +16,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private List<KaraokeLine> kLines;
 	private KaraokeLine currentLine = null;
 	private int currentLineIndex = 0;
+	private int topLineIndex = 0;
 	private int currentLyricIndex = 0;
 	private long startTime;
 	private int lineNum = 0; // 0 = bottom line
@@ -52,22 +53,24 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		BufferedImage img = event.getImage();
 		Entry<Long, String> nextLyric = nextLyric();
 		long nextTimePoint = nextLyric != null ? nextLyric.getKey() : Long.MAX_VALUE;
-//		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines);
+		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
+		BufferedImage textImg = sc.render();
+		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());
 
-
-		if(time > nextTimePoint - LYRIC_PRE_START_TIME) { // 
-
+		if(time > nextTimePoint - LYRIC_PRE_START_TIME) {
+			
 			if(nextLyric != null) {
 				currentLyricIndex++;
-			} else if(currentLineIndex < kLines.size() - 1){
+			}
+			if(isEndOfLine() && currentLineIndex < kLines.size() - 1) {
 				currentLineIndex++;
 				currentLyricIndex = 0;
+				if(currentLineIndex - topLineIndex >=  KaraokeScreen.LINES_TO_RENDER) {
+					topLineIndex = currentLineIndex;
+				}
 			}
-			
 		}
-//		BufferedImage textImg = sc.render(currentLineIndex, currentLineIndex, currentLyricIndex);
-		BufferedImage textImg = null;
-		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());
+			
 		super.onVideoPicture(modifiedEvent);
 	}
 	

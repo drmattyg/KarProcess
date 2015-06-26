@@ -30,13 +30,6 @@ public class VideoTest {
 	static long startTime = 10000; // 10 seconds
 	static long duration = 40000; // 15 seconds
 	public static void main(String[] args) {
-		try {
-			ProcessKar.generateKarVideo(VIDEO_FILE, MIDI_FILE, 10, OUTPUT_FILE);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.exit(0);
 //		// test scaling down video
 //		IStream vidStream = MediaTools.getVideoStream("/Users/mgordon/Downloads/star_wars_7_the_force_awakens-teaser2/Star Wars Episode VII - The Force Awakens - Teaser Trailer 2.mp4");
 //		int targetWidth = 720;

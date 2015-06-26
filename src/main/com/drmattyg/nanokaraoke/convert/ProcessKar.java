@@ -33,8 +33,10 @@ public class ProcessKar {
 		VideoCutter vc = VideoCutter.getInstance(startTime, wavFileDuration + FADE_TIME*2, FADE_TIME, writer);
 		IMediaReader vidReader = ToolFactory.makeReader(videoFile);
 		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, FADE_TIME);
-		vc.cutVideo(vidReader, Collections.singletonList(ks), MediaTools.OUTPUT_VIDEO_STREAM_ID);
-		writer.close();
+//		IMediaWriter cutWriter =  vc.cutVideo(vidReader, Collections.singletonList(ks), MediaTools.OUTPUT_VIDEO_STREAM_ID);
+		IMediaWriter cutWriter =  vc.cutVideo(vidReader, Collections.EMPTY_LIST, MediaTools.OUTPUT_VIDEO_STREAM_ID);
+		cutWriter.close();
+
 		
 	}
 	
