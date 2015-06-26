@@ -29,6 +29,7 @@ public class MidiEventHandlers {
 		
 	}
 	
+	
 	public static class TextHandler extends MidiEventHandler {
 		private Map<Integer, TextEvent> lyricsMap = new HashMap<Integer, TextEvent>();
 		@Override

@@ -98,6 +98,7 @@ public class MediaTools {
 				last.addListener(filters.get(i));
 				last = filters.get(i);
 			}
+			last.addListener(this);
 			while (mediaReader.readPacket() == null);
 			return mediaWriter;
 			

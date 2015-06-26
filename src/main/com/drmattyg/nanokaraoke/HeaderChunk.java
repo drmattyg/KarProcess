@@ -5,6 +5,18 @@ import java.util.Arrays;
 public class HeaderChunk {
 	
 	byte[] bytes;
+	public int getLength() {
+		return length;
+	}
+	public int getFormat() {
+		return format;
+	}
+	public int getNumTracks() {
+		return numTracks;
+	}
+	public int getDivision() {
+		return division;
+	}
 	int length;
 	int format;
 	int numTracks;

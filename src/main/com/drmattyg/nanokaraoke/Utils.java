@@ -25,9 +25,9 @@ public class Utils {
 	}
 	
 	// TODO: this only works for tracks with a single tempo; need to fix this
-	public static float deltaToMillis(int tempo, int division, long d) {
+	public static int deltaToMillis(int tempo, int division, long d) {
 //		double bpm = 1/(tempo/1e6/60);
-		return d*tempo*1.0f/(division * 1000.0f);
+		return Math.round(d*tempo*1.0f/(division * 1000.0f));
 	}
 
 }
