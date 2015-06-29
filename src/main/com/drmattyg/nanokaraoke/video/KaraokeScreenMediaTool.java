@@ -11,6 +11,8 @@ import com.drmattyg.nanokaraoke.Utils;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
 import com.xuggle.mediatool.event.VideoPictureEvent;
+import com.xuggle.xuggler.video.ConverterFactory;
+import com.xuggle.xuggler.video.IConverter;
 
 
 public class KaraokeScreenMediaTool extends MediaToolAdapter {
@@ -22,6 +24,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private long startTime;
 	private MidiFile midiFile;
 	private boolean startRender = false;
+	private IConverter converter = null;
 	private static final long LYRIC_PRE_START_TIME = 100; // millisecods before the lyric to highlight it
 	private static final long LINE_PRE_START_TIME = 1000; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
@@ -58,6 +61,10 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	public void onVideoPicture(IVideoPictureEvent event) {
 		long time = event.getTimeStamp(TimeUnit.MILLISECONDS) - startTime;
 		BufferedImage img = event.getImage();
+		
+		// If the previously chained tool does some manipulation, getImage may return null and we need to convert the image
+		if(converter == null) converter = ConverterFactory.createConverter(ConverterFactory.XUGGLER_BGR_24, event.getPicture());
+		if(img == null) img = converter.toImage(event.getPicture());
 		Entry<Long, String> nextLyric = nextLyric();
 		long nextTimePointDelta = nextLyric != null ? nextLyric.getKey() : Long.MAX_VALUE;
 		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta);

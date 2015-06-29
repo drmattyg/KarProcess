@@ -9,13 +9,23 @@ import com.xuggle.xuggler.IVideoResampler;
 
 public class Rescaler extends MediaToolAdapter {
 	private int targetWidth;
+
+
 	private int targetHeight = 0;
+	public int getTargetHeight() {
+		return targetHeight;
+	}
 	private IVideoResampler videoResampler;
 	private int streamId;
-	public Rescaler(int targetWidth, int targetHeight, int streamId) {
+	private Rescaler(int targetWidth, int targetHeight, int streamId) {
 		this.targetWidth = targetWidth;
 		this.targetHeight = targetHeight;
 		this.streamId = streamId;
+	}
+	
+	public static Rescaler getInstance(int targetWidth, String videoFile, int streamId) {
+		int targetHeight = getScaledHeight(videoFile, targetWidth);
+		return new Rescaler(targetWidth, targetHeight, streamId);
 	}
 	
 	@Override

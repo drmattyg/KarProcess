@@ -51,11 +51,11 @@ public class VideoTest {
 		int targetHeight = Rescaler.getScaledHeight(videoFile, targetWidth);
 		IMediaWriter writer = MediaTools.makeVideoWriter("/Users/mgordon/test/tb_out.mp4", myCodec, targetWidth, targetHeight, VIDEO_STREAM_ID);
 //		IMediaWriter writer = MediaTools.makeVideoWriter(videoFile, output, VIDEO_STREAM_ID);
-		Rescaler r = new Rescaler(targetWidth, targetHeight, VIDEO_STREAM_ID);
+//		Rescaler r = new Rescaler(targetWidth, targetHeight, VIDEO_STREAM_ID);
 		MediaTools.addAudioChannel(writer, audio, AUDIO_STREAM_ID);
 		VideoCutter vc = VideoCutter.getInstance(startTime, duration, 5000, writer);
 		IMediaReader vidReader = ToolFactory.makeReader(videoFile);
-		vc.cutVideo(vidReader, Collections.singletonList(r), VIDEO_STREAM_ID);
+	//	vc.cutVideo(vidReader, Collections.singletonList(r), VIDEO_STREAM_ID);
 //		vc.cutVideo(vidReader, Collections.EMPTY_LIST, VIDEO_STREAM_ID);
 		vc.cutVideo(vidReader, VIDEO_STREAM_ID);
 		IMediaReader au = ToolFactory.makeReader(audio);

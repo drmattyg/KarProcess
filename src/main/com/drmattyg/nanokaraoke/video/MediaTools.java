@@ -187,4 +187,9 @@ public class MediaTools {
 	    return (long)Math.ceil(durationInMillis);
 	}
 	
+	public static BufferedImage getImageFromEvent(IVideoPictureEvent ev) {
+		return null;
+	}
+	
+	
 }
