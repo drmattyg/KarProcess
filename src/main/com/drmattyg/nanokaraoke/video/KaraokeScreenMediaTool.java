@@ -69,7 +69,6 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 			System.out.println(kLines.get(currentLineIndex).lyrics.get(currentLyricIndex));
 		}
 		if(time > nextTimePoint - LYRIC_PRE_START_TIME) {
-			System.out.println(nextTimePoint);
 			
 			
 			if(nextLyric != null) {

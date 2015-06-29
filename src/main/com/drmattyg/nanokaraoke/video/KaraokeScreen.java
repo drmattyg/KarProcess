@@ -25,7 +25,6 @@ public class KaraokeScreen {
 	private List<KaraokeLine> lines;
 	private BufferedImage img;
 	public static final int LINES_TO_RENDER = 2;
-	private static final int VERTICAL_PADDING = 10;
 	private static final int HORIZONTAL_PADDING = 20;
 	private static final float STROKE_WIDTH = 3; 
 	private static final Color SUNG_COLOR = Color.CYAN;
@@ -57,8 +56,14 @@ public class KaraokeScreen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		float sf = img.getWidth()*1.0f/g.getFontMetrics().stringWidth(KaraokeLine.LINE_SCALER);
 		int th = g.getFontMetrics().getHeight();
+//		int verticalPadding = (int)Math.ceil(th*1.0/3);
+		
+		// seems like the vertical padding is unnecessary, it's factored into the text height, which I think is overgenerous to begin with.  But it seems to be working okay.
+		// Not going to waste time over-tweaking it for the moment.
+		int verticalPadding = 0; // 
+		
 		int tw = g.getFontMetrics().stringWidth(text);
-		int y = height - (th + VERTICAL_PADDING)*(lineNumber + 1);
+		int y = height - (th + verticalPadding)*lineNumber + verticalPadding;
 		int x = Math.round((width - (tw + 2*HORIZONTAL_PADDING)*sf)/2);
 		return new Point2D.Float(x,  y);
 	}
