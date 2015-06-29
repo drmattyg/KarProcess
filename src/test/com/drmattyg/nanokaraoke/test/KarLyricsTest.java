@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -17,6 +18,7 @@ import org.junit.Test;
 
 import com.drmattyg.nanokaraoke.MidiEventHandlers;
 import com.drmattyg.nanokaraoke.MidiFile;
+import com.drmattyg.nanokaraoke.Utils;
 
 
 public class KarLyricsTest {
@@ -27,7 +29,17 @@ public class KarLyricsTest {
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(fn);
 		List<Integer> events = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
-		System.out.println(events);
+		List<Long> eventMillis = new ArrayList<Long>();
+		assertEquals(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size(), 1); // dont currently handle more than one tempo
+		int tempo = MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
+		assertTrue(tempo != 0);
+		int div = mf.getHeaderChunk().getDivision();
+		assertTrue(div != 0);
+		for(Integer e : events) { 
+			eventMillis.add((long)Utils.deltaToMillis(tempo, div, e));
+		}
+		System.out.println(eventMillis);
+		assertTrue(23700 == eventMillis.get(1));
 	}
 
 	

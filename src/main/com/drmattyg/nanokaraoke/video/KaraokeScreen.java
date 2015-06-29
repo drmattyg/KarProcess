@@ -90,13 +90,13 @@ public class KaraokeScreen {
 			float scaleFactor = calculateScaleFactor(kLine.toString());
 			Point2D offset = calculateOffset(kLine.toString(), topLineIndex + LINES_TO_RENDER - i);
 			Color lineColor;
-			if(i <= currentLineIndex) {
-				lineColor = UNSUNG_COLOR;
-			} else {
+			if(currentLineIndex > topLineIndex && i < currentLineIndex) {
 				lineColor = SUNG_COLOR;
+			} else {
+				lineColor = UNSUNG_COLOR;
 			}
 			drawText(kLine.toString(), lineColor, scaleFactor, offset);
-			if(i == currentLineIndex) {
+			if(i == currentLineIndex && lyricOffset >= 0) {
 				String partial = kLine.subString(lyricOffset);
 				drawText(partial, SUNG_COLOR, scaleFactor, offset);
 			}

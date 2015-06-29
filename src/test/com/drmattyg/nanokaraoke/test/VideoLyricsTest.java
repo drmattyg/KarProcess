@@ -16,7 +16,7 @@ import com.xuggle.mediatool.ToolFactory;
 
 public class VideoLyricsTest {
 
-	private static final String VIDEO_FILE = "src/test/resources/Rollercoaster.mov";
+	private static final String VIDEO_FILE = "src/test/resources/tommyboy.mp4";
 	private static final String OUTPUT_FILE = "test_output/lyrics_output.mp4";
 	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
 	
