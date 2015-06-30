@@ -25,8 +25,8 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private MidiFile midiFile;
 	private boolean startRender = false;
 	private IConverter converter = null;
-	private static final long LYRIC_PRE_START_TIME = 100; // millisecods before the lyric to highlight it
-	private static final long LINE_PRE_START_TIME = 1000; // milliseconds before the line to draw it
+	private static final long LYRIC_PRE_START_TIME = 500; // millisecods before the lyric to highlight it
+	private static final long LINE_PRE_START_TIME = 1500; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
 	public static KaraokeScreenMediaTool getInstance(MidiFile mf, long startTime) {
 		KaraokeScreenMediaTool k = new KaraokeScreenMediaTool();
@@ -71,10 +71,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
 		BufferedImage textImg = sc.render();
 		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());
-		if(currentLyricIndex > -1) {
-			System.out.println(time);
-			System.out.println(kLines.get(currentLineIndex).lyrics.get(currentLyricIndex));
-		}
+
 		if(time > nextTimePoint - LYRIC_PRE_START_TIME) {
 			
 			
@@ -88,8 +85,13 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 					topLineIndex = currentLineIndex;
 				}
 			}
-		}
-			
+		} 
+		// can't get this to work for some reason, punting on this for now.
+//		else if(time > nextTimePoint - LINE_PRE_START_TIME && currentLineIndex < kLines.size() - 1 && currentLineIndex - topLineIndex >= KaraokeScreen.LINES_TO_RENDER) {
+//			currentLineIndex++;
+//			currentLyricIndex = -1;
+//			topLineIndex = currentLineIndex;
+//		}			
 		super.onVideoPicture(modifiedEvent);
 	}
 	

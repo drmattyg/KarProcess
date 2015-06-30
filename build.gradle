@@ -1,6 +1,24 @@
 apply plugin: "java"
-//apply plugin: "application"
+apply plugin: "application"
 apply plugin: "eclipse"
+apply plugin: 'gradle-one-jar'
+
+mainClassName = "com.drmattyg.nanokaraoke.convert.ProcessKarCli"
+
+task onejar(type:OneJar) {
+	mainClass = "com.drmattyg.nanokaraoke.convert.ProcessKarCli"
+}
+
+
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -11,4 +29,13 @@ repositories {
 
 dependencies {
 	compile(group: 'xuggle', name: 'xuggle-xuggler', version: '5.4')
+	testCompile 'junit:junit:4.12'
 }
+
+
+jar {
+	manifest {
+		attributes 'Main-Class': "com.drmattyg.nanokaraoke.convert.ProcessKarCli"
+	}
+}
+
