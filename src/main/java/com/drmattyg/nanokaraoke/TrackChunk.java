@@ -72,7 +72,7 @@ public class TrackChunk implements Iterable<TrackEvent> {
 
 			@Override
 			public boolean hasNext() {
-				return iteratorOffset < length
+				return iteratorOffset < length + offset
 						&& !TrackChunk.isTrackChunk(mf, iteratorOffset); // if
 																			// this
 																			// is
