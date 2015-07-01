@@ -41,7 +41,7 @@ public class ProcessKar {
 		MediaTools.addAudioChannel(writer, wf.getPath(), MediaTools.OUTPUT_AUDIO_STREAM_ID);
 		VideoCutter vc = VideoCutter.getInstance(startTime, wavFileDuration + 2*FADE_TIME, FADE_TIME, writer);
 		IMediaReader vidReader = ToolFactory.makeReader(videoFile);
-		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, 5000);
+		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, FADE_TIME);
 		
 		List<MediaToolAdapter> filters = new ArrayList<MediaToolAdapter>();
 		// adding the rescaler first
@@ -49,7 +49,7 @@ public class ProcessKar {
 		filters.add(ks);
 		IMediaWriter cutWriter =  vc.cutVideo(vidReader, filters, MediaTools.OUTPUT_VIDEO_STREAM_ID);
 		System.out.println(wf.getPath());
-		OverlayAudioTool oat = OverlayAudioTool.getInstance(wf.getPath(), 5000, cutWriter, MediaTools.OUTPUT_AUDIO_STREAM_ID);
+		OverlayAudioTool oat = OverlayAudioTool.getInstance(wf.getPath(), FADE_TIME, cutWriter, MediaTools.OUTPUT_AUDIO_STREAM_ID);
 		IMediaReader au = ToolFactory.makeReader(wf.getPath());
 		
 		au.addListener(oat);

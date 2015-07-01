@@ -75,7 +75,6 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 
 		if(time > nextTimePoint - LYRIC_PRE_START_TIME) {
 			
-			
 			if(nextLyric != null) {
 				currentLyricIndex++;
 			}
@@ -86,6 +85,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 					topLineIndex = currentLineIndex;
 				}
 			}
+
 		} 
 		// can't get this to work for some reason, punting on this for now.
 //		else if(time > nextTimePoint - LINE_PRE_START_TIME && currentLineIndex < kLines.size() - 1 && currentLineIndex - topLineIndex >= KaraokeScreen.LINES_TO_RENDER) {

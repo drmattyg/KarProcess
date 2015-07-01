@@ -20,7 +20,8 @@ public class AudioOverlayTest {
 
 	private static final String VIDEO_FILE = "/System/Library/Compositions/Rollercoaster.mov";
 	private static final String OUTPUT_FILE = "test_output/audio_output.mp4";
-	private static final String AUDIO_FILE = "/Library/Java/Demos/Sound/JavaSoundDemo/audio/1-welcome.wav";
+//	private static final String AUDIO_FILE = "/Library/Java/Demos/Sound/JavaSoundDemo/audio/1-welcome.wav";
+	private static final String AUDIO_FILE ="/var/folders/zq/kc7xx4_955bdcmzj75rvvbsj0809w1/T/kpout2920018928117226232.wav";
 	private static final long FADE_TIME = 5000;
 	
 	@Test

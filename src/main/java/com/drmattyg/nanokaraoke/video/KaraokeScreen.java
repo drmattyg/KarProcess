@@ -90,7 +90,7 @@ public class KaraokeScreen {
 	}
 	
 	public BufferedImage render() {
-		for(int i = topLineIndex; i < topLineIndex + LINES_TO_RENDER; i++) {
+		for(int i = topLineIndex; i < topLineIndex + LINES_TO_RENDER && i < lines.size(); i++) {
 			KaraokeLine kLine = lines.get(i);
 			float scaleFactor = calculateScaleFactor(kLine.toString());
 			Point2D offset = calculateOffset(kLine.toString(), topLineIndex + LINES_TO_RENDER - i);
