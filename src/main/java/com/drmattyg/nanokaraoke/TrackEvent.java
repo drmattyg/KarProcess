@@ -22,7 +22,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 	}
 	VarLength time;
 	VarLength eventLength;
-	enum EventType {
+	public enum EventType {
 		Meta, Sysex, Midi;
 	}
 	
@@ -48,7 +48,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 		if(eventType != EventType.Midi) {
 			return 0;
 		} else {
-			return statusByte;
+			return statusByte & 0xFF;
 		}
 	}
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta

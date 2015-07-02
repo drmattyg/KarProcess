@@ -20,7 +20,9 @@ import junit.framework.TestCase;
 
 public class LyricsWavTimingTest extends TestCase {
 
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/blueberry_hill_karaoke_songs_NifterDotCom.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar"; WORKS start delta = 0
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
@@ -38,12 +40,15 @@ public class LyricsWavTimingTest extends TestCase {
 			clip.start();
 			System.out.println("Starting");
 			long startTime = System.currentTimeMillis();
+			int startDelta = mf.getMusicStartDelta();
+			System.out.println("Start delta = " + startDelta);
 			for(Integer d : deltas) {
-				long t = Utils.deltaToMillis(tempo, div, d);
+
+				long t = Utils.deltaToMillis(tempo, div, d - startDelta);
 				long currentTime;
 //				while(System.currentTimeMillis()  - startTime < t) {
 				while((currentTime = System.currentTimeMillis()  - startTime) < t) {
-					System.out.println(currentTime);
+//					System.out.println(currentTime);
 					Thread.sleep(50);
 				}
 				System.out.println(events.get(d) + " : " + t);

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import com.drmattyg.nanokaraoke.TrackEvent.EventType;
 //1 division = 1 dtu/qn
 //tempo = us/qn
 //
@@ -42,6 +44,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 		}
 	}
 	
+	
 	byte[] bytes;
 	int offset;
 	HeaderChunk header;
@@ -72,6 +75,24 @@ public class MidiFile implements Iterable<TrackChunk>{
 	public HeaderChunk getHeaderChunk() { return HeaderChunk.getInstance(this); }
 
 	private int iteratorOffset;
+	
+	// this is the firt time a key is pressed; this is the start of the music
+	// this is important because the WAV output starts at the start of the music, not the midi time zero
+	public int getMusicStartDelta() {
+		int startTime = Integer.MAX_VALUE;
+		for(TrackChunk tc : this) {
+			for(TrackEvent te: tc) {
+				if(te.getEventType() == EventType.Midi 
+						&& te.getStatusByte() >= 0x90 && te.getStatusByte() <= 0x9F 
+						&& te.getTimeOffset() < startTime) {
+					startTime = te.getTimeOffset();
+				}
+			}
+		}
+		return startTime;
+	}
+	
+
 	
 	public Iterator<TrackChunk> privateIterator() {
 		iteratorOffset = header.getTotalLength(); // this is always the header length

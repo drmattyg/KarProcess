@@ -8,8 +8,12 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.Timer;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -18,6 +22,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 
 import com.drmattyg.nanokaraoke.*;
+import com.drmattyg.nanokaraoke.TrackEvent.EventType;
 
 import org.junit.Test;
 
@@ -27,37 +32,40 @@ import com.drmattyg.nanokaraoke.video.*;
 
 public class LyricsTimingTest extends TestCase {
 
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/blueberry_hill_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
 	int currentLyricIndex;
 	List<KaraokeLine> kLines;
 	int currentLineIndex;
 	@Test
 	public void test() {
+		SortedMap<Integer, TrackEvent> midiOffsets = new TreeMap<Integer, TrackEvent>();
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
-		for(TrackChunk tc : mf) {
-			for(TrackEvent te : tc) {
-				if(te.isMeta()) {
-					System.out.println(te.getMetaType());
-				}
+
+		for(TrackEvent te : midiOffsets.values()) {
+			if(te.getEventType() == EventType.Midi) {
+				System.out.println(te.getTimeOffset() + " / " + String.format("0x%x", te.getStatusByte()));
 			}
 		}
 		int tempo = MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
+		
 		int div = mf.getHeaderChunk().getDivision();
 		List<Integer> deltas = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
 		Map<Integer, TextEvent> events = MidiEventHandlers.TEXT_HANDLER.getTextMap();
-
 		
 		try {
 			playFile(MIDI_FILE);
 			long startTime = System.currentTimeMillis();
 			for(Integer d : deltas) {
+
 				long t = Utils.deltaToMillis(tempo, div, d);
 				long currentTime;
 //				while(System.currentTimeMillis()  - startTime < t) {
 				while((currentTime = System.currentTimeMillis()  - startTime) < t) {
 					Thread.sleep(50);
+					System.out.println(currentTime);
 				}
-				System.out.println(events.get(d));
+				System.out.println(events.get(d) + " : " + t);
 
 			}
 		} catch (Exception e) {
