@@ -37,5 +37,12 @@ jar {
 	manifest {
 		attributes 'Main-Class': "com.drmattyg.nanokaraoke.convert.ProcessKarCli"
 	}
+	
+
 }
+
+task copyRuntimeLibs(type: Copy) {
+	into "lib"
+	from configurations.runtime
+  }
 
