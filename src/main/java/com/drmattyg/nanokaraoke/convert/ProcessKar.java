@@ -1,7 +1,10 @@
 package com.drmattyg.nanokaraoke.convert;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,9 +77,12 @@ public class ProcessKar {
 			throw new IllegalArgumentException("Kar file is not readable");
 		}
 		File tempFile = File.createTempFile("kpout", ".wav");
+		File tempMidiFile = File.createTempFile("kpmid", ".kar");
+		Files.copy(karFile.toPath(), new FileOutputStream(tempMidiFile));
 		String tempFilename = tempFile.getPath();
 		tempFile.delete();
-		String command = timidity + " -Ow -o " + tempFilename + " " + filename;
+		String command = timidity + " -Ow -o " + tempFilename + " " + tempMidiFile;
+		System.out.println(command);
 		Process p = Runtime.getRuntime().exec(command);
 		while(true) {
 			try {
