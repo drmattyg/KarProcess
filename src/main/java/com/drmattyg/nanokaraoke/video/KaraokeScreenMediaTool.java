@@ -25,6 +25,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private MidiFile midiFile;
 	private boolean startRender = false;
 	private IConverter converter = null;
+	private int deltaOffset;
 	private static final long LYRIC_PRE_START_TIME = 500; // millisecods before the lyric to highlight it
 	private static final long LINE_PRE_START_TIME = 1500; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
@@ -33,6 +34,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		k.midiFile = mf;
 		k.kLines = KaraokeLine.toKaraokeLines(mf);
 		k.startTime = startTime;
+		k.deltaOffset = mf.getMusicStartDelta();
 		if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() > 1) {
 			throw new UnsupportedOperationException("Doesn't support tempo changes (yet)");
 		} 
@@ -68,7 +70,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		if(img == null) img = converter.toImage(event.getPicture());
 		Entry<Long, String> nextLyric = nextLyric();
 		long nextTimePointDelta = nextLyric != null ? nextLyric.getKey() : Long.MAX_VALUE;
-		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta);
+		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta - deltaOffset);
 		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
 		BufferedImage textImg = sc.render();
 		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());

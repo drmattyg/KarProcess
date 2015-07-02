@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.drmattyg.nanokaraoke.MidiEventHandlers;
 import com.drmattyg.nanokaraoke.MidiFile;
 import com.drmattyg.nanokaraoke.video.KaraokeScreenMediaTool;
 import com.drmattyg.nanokaraoke.video.MediaTools;
@@ -17,6 +18,7 @@ import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
+import com.xuggle.xuggler.Utils;
 
 public class ProcessKar {
 	private static final long FADE_TIME = 5000;
@@ -48,7 +50,6 @@ public class ProcessKar {
 		filters.add(r);
 		filters.add(ks);
 		IMediaWriter cutWriter =  vc.cutVideo(vidReader, filters, MediaTools.OUTPUT_VIDEO_STREAM_ID);
-		System.out.println(wf.getPath());
 		OverlayAudioTool oat = OverlayAudioTool.getInstance(wf.getPath(), FADE_TIME, cutWriter, MediaTools.OUTPUT_AUDIO_STREAM_ID);
 		IMediaReader au = ToolFactory.makeReader(wf.getPath());
 		

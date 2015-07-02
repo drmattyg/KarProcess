@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class MidiEventHandlers {
 
@@ -14,7 +16,7 @@ public class MidiEventHandlers {
 	public static final TextHandler TEXT_HANDLER = new TextHandler();
 	public static final Collection<MidiEventHandler> DEFAULT_HANDLERS = Arrays.asList(TEMPO_HANDLER, TEXT_HANDLER);
 	public static class TempoHandler extends MidiEventHandler {
-		private Map<Integer, Integer> timeTempoMap = new HashMap<Integer, Integer>();
+	private SortedMap<Integer, Integer> timeTempoMap = new TreeMap<Integer, Integer>();
 
 //		public static TempoHandler getInstance() { return new TempoHandler(); }
 		@Override
@@ -27,11 +29,18 @@ public class MidiEventHandlers {
 		}
 		public Map<Integer, Integer> getTempoMap() { return timeTempoMap; }
 		
+		public Integer getInitialTempo() {
+			if(timeTempoMap.size() == 0) {
+				return 500000;
+			} else {
+				return timeTempoMap.firstKey();
+			}
+		}
 	}
 	
 	
 	public static class TextHandler extends MidiEventHandler {
-		private Map<Integer, TextEvent> lyricsMap = new HashMap<Integer, TextEvent>();
+		private SortedMap<Integer, TextEvent> lyricsMap = new TreeMap<Integer, TextEvent>();
 		@Override
 		public void handleEvent(TrackEvent te) {
 			if(te.getMetaType() != MetaEventType.TEXT) return;
@@ -41,9 +50,7 @@ public class MidiEventHandlers {
 		
 		public Map<Integer, TextEvent> getTextMap() { return lyricsMap; }
 		public List<Integer> getSortedTimeOffsets() { 
-			List<Integer> r = new ArrayList<Integer>(lyricsMap.keySet());
-			Collections.sort(r);
-			return r;
+			return new ArrayList<Integer>(lyricsMap.keySet());
 		}
 		
 	}

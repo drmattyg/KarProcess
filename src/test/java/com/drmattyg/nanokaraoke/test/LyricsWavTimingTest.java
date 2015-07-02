@@ -20,9 +20,9 @@ import junit.framework.TestCase;
 
 public class LyricsWavTimingTest extends TestCase {
 
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
 //	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar"; WORKS start delta = 0
-//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);

@@ -92,7 +92,6 @@ public class MidiFile implements Iterable<TrackChunk>{
 		return startTime;
 	}
 	
-
 	
 	public Iterator<TrackChunk> privateIterator() {
 		iteratorOffset = header.getTotalLength(); // this is always the header length
