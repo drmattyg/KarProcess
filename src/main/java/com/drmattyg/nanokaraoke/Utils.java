@@ -2,6 +2,9 @@ package com.drmattyg.nanokaraoke;
 
 import java.util.Arrays;
 
+import com.xuggle.xuggler.ICodec.Type;
+import com.xuggle.xuggler.IContainer;
+
 public class Utils {
 
 	public static int toInt(byte[] b, int offset) {
@@ -29,5 +32,19 @@ public class Utils {
 //		double bpm = 1/(tempo/1e6/60);
 		return Math.round(d*tempo*1.0f/(division * 1000.0f));
 	}
+	
+	public static long getVideoLength(String filename) throws IllegalArgumentException {
+		IContainer c = IContainer.make();
+		if(c.open(filename, IContainer.Type.READ, null) < 0) {
+			throw new IllegalArgumentException("Unable to open " + filename);
+		}
+		for(int i = 0; i < c.getNumStreams(); i++) {
+			if(c.getStream(i).getStreamCoder().getCodecType() == Type.CODEC_TYPE_VIDEO) {
+				return c.getStream(i).getDuration();
+			}
+		}
+		return -1;
+	}
+	
 
 }
