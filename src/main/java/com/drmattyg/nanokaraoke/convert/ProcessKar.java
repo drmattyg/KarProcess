@@ -82,9 +82,12 @@ public class ProcessKar {
 			try {
 				p.waitFor();
 				break;
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) { System.out.println(e.getMessage());}
 		}
-		if(p.exitValue() != 0) throw new ConversionFailureException("Timidity failed: " + p.getOutputStream());
+		if(p.exitValue() != 0) {
+			System.out.println("Timidity failed: " + p.getOutputStream());
+			throw new ConversionFailureException("Timidity failed: " + p.getOutputStream());
+		}
 		return new File(tempFile.getPath());
 	}
 	
