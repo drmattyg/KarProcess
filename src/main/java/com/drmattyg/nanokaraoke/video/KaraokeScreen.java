@@ -76,6 +76,7 @@ public class KaraokeScreen {
 	}
 	
 	private void drawText(String text, Color fillColor, float scaleFactor, Point2D offset) {
+		if(text.isEmpty()) return; // TextLayout will throw an exception if this is empty
 		Graphics2D g = img.createGraphics();
 		g.translate(offset.getX(), offset.getY());
 		g.scale(scaleFactor, scaleFactor);
