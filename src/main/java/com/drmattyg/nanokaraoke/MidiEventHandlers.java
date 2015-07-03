@@ -27,13 +27,13 @@ public class MidiEventHandlers {
 			int tempo = Utils.toInt(te.getBytes(), 3, dataOffset);
 			timeTempoMap.put(timeOffset, tempo);
 		}
-		public Map<Integer, Integer> getTempoMap() { return timeTempoMap; }
+		public SortedMap<Integer, Integer> getTempoMap() { return timeTempoMap; }
 		
 		public Integer getInitialTempo() {
 			if(timeTempoMap.size() == 0) {
 				return 500000;
 			} else {
-				return timeTempoMap.firstKey();
+				return timeTempoMap.values().iterator().next();
 			}
 		}
 	}

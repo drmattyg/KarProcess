@@ -22,7 +22,8 @@ public class LyricsWavTimingTest extends TestCase {
 
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
 //	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar"; WORKS start delta = 0
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/Downloads/good_vibrations_karaoke_songs_NifterDotCom.kar";
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
@@ -42,9 +43,11 @@ public class LyricsWavTimingTest extends TestCase {
 			long startTime = System.currentTimeMillis();
 			int startDelta = mf.getMusicStartDelta();
 			System.out.println("Start delta = " + startDelta);
+			long timeOffset = mf.timeOffsetForDelta(startDelta);
 			for(Integer d : deltas) {
 
-				long t = Utils.deltaToMillis(tempo, div, d - startDelta);
+//				long t = Utils.deltaToMillis(tempo, div, d - startDelta);
+				long t = mf.timeOffsetForDelta(d) - timeOffset;
 				long currentTime;
 //				while(System.currentTimeMillis()  - startTime < t) {
 				while((currentTime = System.currentTimeMillis()  - startTime) < t) {
@@ -55,8 +58,9 @@ public class LyricsWavTimingTest extends TestCase {
 			}
 			
 		} catch (Exception e) {
-			fail(e.getMessage());
 			e.printStackTrace();
+			fail(e.getMessage());
+			
 		}
 	}
 }

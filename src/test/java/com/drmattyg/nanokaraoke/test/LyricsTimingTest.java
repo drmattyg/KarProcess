@@ -33,7 +33,10 @@ import com.drmattyg.nanokaraoke.video.*;
 public class LyricsTimingTest extends TestCase {
 
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/good_vibrations_karaoke_songs_NifterDotCom.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/test/In the ghetto - Elvis Presley.kar";
+	
 	int currentLyricIndex;
 	List<KaraokeLine> kLines;
 	int currentLineIndex;
@@ -58,12 +61,12 @@ public class LyricsTimingTest extends TestCase {
 			long startTime = System.currentTimeMillis();
 			for(Integer d : deltas) {
 
-				long t = Utils.deltaToMillis(tempo, div, d);
+				long t = mf.timeOffsetForDelta(d);
+				System.out.println("Time = " + t);
 				long currentTime;
 //				while(System.currentTimeMillis()  - startTime < t) {
 				while((currentTime = System.currentTimeMillis()  - startTime) < t) {
 					Thread.sleep(50);
-					System.out.println(currentTime);
 				}
 				System.out.println(events.get(d) + " : " + t);
 

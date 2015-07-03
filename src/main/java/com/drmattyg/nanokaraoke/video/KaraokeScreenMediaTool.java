@@ -1,8 +1,12 @@
 package com.drmattyg.nanokaraoke.video;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 
 import com.drmattyg.nanokaraoke.MidiEventHandlers;
@@ -21,12 +25,16 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private int currentLineIndex = 0;
 	private int topLineIndex = 0;
 	private int currentLyricIndex = -1;
+	private int tempoIndex = 0;
 	private long startTime;
 	private MidiFile midiFile;
 	private boolean startRender = false;
 	private IConverter converter = null;
 	private int deltaOffset;
-	private static final long LYRIC_PRE_START_TIME = 500; // millisecods before the lyric to highlight it
+	private SortedMap<Integer, Integer> tempoMap;
+	private List<Integer> tempoPoints;
+	private int tempoPointIndex = 0;
+	private static final long LYRIC_PRE_START_TIME = 100; // millisecods before the lyric to highlight it
 	private static final long LINE_PRE_START_TIME = 1500; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
 	public static KaraokeScreenMediaTool getInstance(MidiFile mf, long startTime) {
@@ -35,16 +43,15 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		k.kLines = KaraokeLine.toKaraokeLines(mf);
 		k.startTime = startTime;
 		k.deltaOffset = mf.getMusicStartDelta();
-		if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() > 1) {
-			throw new UnsupportedOperationException("Doesn't support tempo changes (yet)");
-		} 
+		k.tempoMap = MidiEventHandlers.TEMPO_HANDLER.getTempoMap();
+		k.tempoPoints = new ArrayList<Integer>(k.tempoMap.keySet());
 		return k;
 	}
 	
-	private int getTempo() {
-		if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() == 0) return 500000; // this is the default if no tempo is specified
-		return MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
-	}
+//	private int getTempo() {
+//		if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() == 0) return 500000; // this is the default if no tempo is specified
+//		return MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
+//	}
 	
 	private Entry<Long, String> nextLyric() {
 		if(currentLyricIndex < kLines.get(currentLineIndex).lyrics.size() - 1) {
@@ -64,13 +71,13 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	public void onVideoPicture(IVideoPictureEvent event) {
 		long time = event.getTimeStamp(TimeUnit.MILLISECONDS) - startTime;
 		BufferedImage img = event.getImage();
-		
 		// If the previously chained tool does some manipulation, getImage may return null and we need to convert the image
 		if(converter == null) converter = ConverterFactory.createConverter(ConverterFactory.XUGGLER_BGR_24, event.getPicture());
 		if(img == null) img = converter.toImage(event.getPicture());
 		Entry<Long, String> nextLyric = nextLyric();
 		long nextTimePointDelta = nextLyric != null ? nextLyric.getKey() : Long.MAX_VALUE;
-		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta - deltaOffset);
+//		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta - deltaOffset);
+		long nextTimePoint = midiFile.timeOffsetForDelta((int)nextTimePointDelta);
 		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
 		BufferedImage textImg = sc.render();
 		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());
