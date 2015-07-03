@@ -1,17 +1,11 @@
 package com.drmattyg.nanokaraoke.video;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 
-import com.drmattyg.nanokaraoke.MidiEventHandlers;
 import com.drmattyg.nanokaraoke.MidiFile;
-import com.drmattyg.nanokaraoke.Utils;
 import com.xuggle.mediatool.MediaToolAdapter;
 import com.xuggle.mediatool.event.IVideoPictureEvent;
 import com.xuggle.mediatool.event.VideoPictureEvent;
@@ -25,15 +19,10 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private int currentLineIndex = 0;
 	private int topLineIndex = 0;
 	private int currentLyricIndex = -1;
-	private int tempoIndex = 0;
 	private long startTime;
 	private MidiFile midiFile;
-	private boolean startRender = false;
 	private IConverter converter = null;
-	private int deltaOffset;
-	private SortedMap<Integer, Integer> tempoMap;
-	private List<Integer> tempoPoints;
-	private int tempoPointIndex = 0;
+	private long audioTimeOffset;
 	private static final long LYRIC_PRE_START_TIME = 100; // millisecods before the lyric to highlight it
 	private static final long LINE_PRE_START_TIME = 1500; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
@@ -42,9 +31,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		k.midiFile = mf;
 		k.kLines = KaraokeLine.toKaraokeLines(mf);
 		k.startTime = startTime;
-		k.deltaOffset = mf.getMusicStartDelta();
-		k.tempoMap = MidiEventHandlers.TEMPO_HANDLER.getTempoMap();
-		k.tempoPoints = new ArrayList<Integer>(k.tempoMap.keySet());
+		k.audioTimeOffset = mf.timeOffsetForDelta(mf.getMusicStartDelta());
 		return k;
 	}
 	
@@ -77,7 +64,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		Entry<Long, String> nextLyric = nextLyric();
 		long nextTimePointDelta = nextLyric != null ? nextLyric.getKey() : Long.MAX_VALUE;
 //		long nextTimePoint = Utils.deltaToMillis(getTempo(), midiFile.getHeaderChunk().getDivision(), nextTimePointDelta - deltaOffset);
-		long nextTimePoint = midiFile.timeOffsetForDelta((int)nextTimePointDelta);
+		long nextTimePoint = midiFile.timeOffsetForDelta((int)nextTimePointDelta) - audioTimeOffset;
 		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
 		BufferedImage textImg = sc.render();
 		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());

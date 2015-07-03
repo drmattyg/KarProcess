@@ -139,6 +139,9 @@ public class MidiFile implements Iterable<TrackChunk>{
 	// also putting in an escape hatch for files with only one tempo (which is most of them)
 	public long timeOffsetForDelta(int delta) {
 		if(delta == 0) return 0;
+		
+		// this can be fed in if there are no more values; just return the highest possible value
+		if(delta == -1 || delta == Long.MAX_VALUE) return Long.MAX_VALUE;
 		int div = getHeaderChunk().division;
 
 		if(tempo != -1){

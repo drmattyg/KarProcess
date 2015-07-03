@@ -22,8 +22,10 @@ import junit.framework.TestCase;
 public class VideoAudioLyricsTest extends TestCase {
 	private static final String VIDEO_FILE = "src/test/resources/tommyboy.mp4";
 	private static final String OUTPUT_FILE = "test_output/lyrics_output.mp4";
-	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
-	private static final String AUDIO_FILE = "src/test/resources/bridge.wav";
+	//private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
+	private static final String MIDI_FILE = "src/test/resources/in_the_ghetto.kar";
+//	private static final String AUDIO_FILE = "src/test/resources/bridge.wav";
+	private static final String AUDIO_FILE = "src/test/resources/in_the_ghetto.wav";
 	
 	@Test
 	public void test() {
