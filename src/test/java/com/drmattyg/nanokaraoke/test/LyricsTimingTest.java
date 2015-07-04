@@ -35,7 +35,7 @@ public class LyricsTimingTest extends TestCase {
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/good_vibrations_karaoke_songs_NifterDotCom.kar";
-	private static final String MIDI_FILE = "/Users/mgordon/test/In the ghetto - Elvis Presley.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/test/Big Girls Don't Cry - The Four Seasons.kar";
 	
 	int currentLyricIndex;
 	List<KaraokeLine> kLines;

@@ -114,21 +114,25 @@ public class MediaTools {
 		private IMediaWriter writer;
 		private int audioStreamId;
 		private int deltaOffset = 0;
+		private long startTimeStamp = 0;
 		private static final IRational myBase = IRational.make(1, 1000); // millis
 		public static OverlayAudioTool getInstance(String audioFile, long startTimeOffset, IMediaWriter output, int audioStreamId) {
 			OverlayAudioTool oa = new OverlayAudioTool();
 			oa.startTime = startTimeOffset;
 			oa.writer = output;
 			oa.audioStreamId = audioStreamId;
-
 			return oa;
 		}
 		
 		@Override
 		public void onAudioSamples(IAudioSamplesEvent event) {
 			IAudioSamples s = event.getAudioSamples();
-			IRational tb = s.getTimeBase();
-			long timestamp = event.getTimeStamp() + tb.rescale(startTime, myBase);
+			
+			if(startTimeStamp == 0) {
+				IRational tb = s.getTimeBase();
+				startTimeStamp = tb.rescale(startTime, myBase);
+			}
+			long timestamp = event.getTimeStamp() + startTimeStamp;
 			s.setTimeStamp(timestamp);
 			writer.encodeAudio(audioStreamId, s);
 			super.onAudioSamples(event);

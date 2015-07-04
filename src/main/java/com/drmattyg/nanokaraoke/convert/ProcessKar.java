@@ -52,10 +52,11 @@ public class ProcessKar {
 		// adding the rescaler first
 		filters.add(r);
 		filters.add(ks);
+		System.out.println("Processing video and lyrics");
 		IMediaWriter cutWriter =  vc.cutVideo(vidReader, filters, MediaTools.OUTPUT_VIDEO_STREAM_ID);
 		OverlayAudioTool oat = OverlayAudioTool.getInstance(wf.getPath(), FADE_TIME, cutWriter, MediaTools.OUTPUT_AUDIO_STREAM_ID);
 		IMediaReader au = ToolFactory.makeReader(wf.getPath());
-		
+		System.out.println("Overlaying audio");
 		au.addListener(oat);
 		while(au.readPacket() == null);
 		
