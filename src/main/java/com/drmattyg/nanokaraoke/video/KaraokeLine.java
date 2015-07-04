@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import com.drmattyg.nanokaraoke.MidiFile;
 import com.drmattyg.nanokaraoke.TrackChunk;
 import com.drmattyg.nanokaraoke.TrackEvent;
+import com.drmattyg.nanokaraoke.MidiEventHandlers.TextHandler;
 
 public class KaraokeLine implements Iterable<Entry<Long, String>> {
 	List<Entry<Long, String>> lyrics;
@@ -72,6 +73,7 @@ public class KaraokeLine implements Iterable<Entry<Long, String>> {
 				}
 			}
 		}
+		lines.add(kLine);
 		return lines;
 	}
 	

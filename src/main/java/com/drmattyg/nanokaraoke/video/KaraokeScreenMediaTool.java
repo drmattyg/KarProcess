@@ -68,9 +68,8 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 		KaraokeScreen sc = KaraokeScreen.getInstance(img, kLines, topLineIndex, currentLineIndex, currentLyricIndex);
 		BufferedImage textImg = sc.render();
 		VideoPictureEvent modifiedEvent = new VideoPictureEvent(this, textImg, event.getTimeStamp(), event.getTimeUnit(), event.getStreamIndex());
-
 		if(time > nextTimePoint - LYRIC_PRE_START_TIME) {
-			
+
 			if(nextLyric != null) {
 				currentLyricIndex++;
 			}
@@ -81,7 +80,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 					topLineIndex = currentLineIndex;
 				}
 			}
-
+			System.out.println(kLines.get(currentLineIndex).lyrics.get(currentLyricIndex) + " L " + currentLineIndex + " Y " + currentLyricIndex);  // for testing
 		} 
 		// can't get this to work for some reason, punting on this for now.
 //		else if(time > nextTimePoint - LINE_PRE_START_TIME && currentLineIndex < kLines.size() - 1 && currentLineIndex - topLineIndex >= KaraokeScreen.LINES_TO_RENDER) {
