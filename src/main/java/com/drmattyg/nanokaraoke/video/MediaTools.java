@@ -113,7 +113,6 @@ public class MediaTools {
 		private long startTime;
 		private IMediaWriter writer;
 		private int audioStreamId;
-		private int deltaOffset = 0;
 		private long startTimeStamp = 0;
 		private static final IRational myBase = IRational.make(1, 1000); // millis
 		public static OverlayAudioTool getInstance(String audioFile, long startTimeOffset, IMediaWriter output, int audioStreamId) {

@@ -22,10 +22,10 @@ import junit.framework.TestCase;
 public class VideoAudioLyricsTest extends TestCase {
 	private static final String VIDEO_FILE = "src/test/resources/tommyboy.mp4";
 	private static final String OUTPUT_FILE = "test_output/lyrics_output.mp4";
-	//private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
-	private static final String MIDI_FILE = "src/test/resources/in_the_ghetto.kar";
-//	private static final String AUDIO_FILE = "src/test/resources/bridge.wav";
-	private static final String AUDIO_FILE = "src/test/resources/in_the_ghetto.wav";
+	private static final String MIDI_FILE = "/Users/mgordon/test/Big Girls Don't Cry - The Four Seasons.kar";
+	//private static final String MIDI_FILE = "src/test/resources/in_the_ghetto.kar";
+	private static final String AUDIO_FILE = "/tmp/bgdc_low.wav";
+//	private static final String AUDIO_FILE = "src/test/resources/in_the_ghetto.wav";
 	
 	@Test
 	public void test() {
@@ -34,10 +34,10 @@ public class VideoAudioLyricsTest extends TestCase {
 			File wf = new File(AUDIO_FILE);
 			long wavFileDuration = MediaTools.getWavFileDuration(wf);
 			MediaTools.addAudioChannel(writer, wf.getPath(), MediaTools.OUTPUT_AUDIO_STREAM_ID);
-			VideoCutter vc = VideoCutter.getInstance(0, 60000, 5000, writer);
+			VideoCutter vc = VideoCutter.getInstance(10000, 60000, 5000, writer);
 			IMediaReader vidReader = ToolFactory.makeReader(VIDEO_FILE);
 			MidiFile mf = MidiFile.getInstance(MIDI_FILE);
-			KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, 5000);
+			KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, 15000);
 			IMediaWriter cutWriter =  vc.cutVideo(vidReader, Collections.singletonList(ks), MediaTools.OUTPUT_VIDEO_STREAM_ID);
 			
 			OverlayAudioTool oat = OverlayAudioTool.getInstance(AUDIO_FILE, 5000, cutWriter, MediaTools.OUTPUT_AUDIO_STREAM_ID);

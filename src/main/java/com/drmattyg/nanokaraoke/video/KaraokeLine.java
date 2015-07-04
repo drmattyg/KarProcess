@@ -63,7 +63,7 @@ public class KaraokeLine implements Iterable<Entry<Long, String>> {
 		KaraokeLine kLine = new KaraokeLine();
 		for(TrackChunk tc : mf) {
 			for(TrackEvent te : tc) {
-				if(te.isText() && te.getTimeOffset() > 0) {
+				if(te.isText() && !te.getTextEvent().toString().startsWith("@")) {
 					String text = te.getTextEvent().toString();
 					if(isLineStart(text)) {
 						if(!kLine.isEmpty()) lines.add(kLine);

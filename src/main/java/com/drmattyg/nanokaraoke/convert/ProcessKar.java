@@ -46,7 +46,7 @@ public class ProcessKar {
 		MediaTools.addAudioChannel(writer, wf.getPath(), MediaTools.OUTPUT_AUDIO_STREAM_ID);
 		VideoCutter vc = VideoCutter.getInstance(startTime, wavFileDuration + 2*FADE_TIME, FADE_TIME, writer);
 		IMediaReader vidReader = ToolFactory.makeReader(videoFile);
-		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, FADE_TIME);
+		KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, FADE_TIME + startTime);
 		
 		List<MediaToolAdapter> filters = new ArrayList<MediaToolAdapter>();
 		// adding the rescaler first
@@ -64,7 +64,7 @@ public class ProcessKar {
 		
 	}
 	
-	public static File karToWav(String filename) throws IOException, ConversionFailureException {
+	public static File karToWav(String filename, int sampleRate) throws IOException, ConversionFailureException {
 		String timidity = System.getProperty("timidity.exec");
 		if(timidity == null) {
 			throw new IllegalArgumentException("timidity.exec property must be specified");
@@ -82,7 +82,7 @@ public class ProcessKar {
 		Files.copy(karFile.toPath(), new FileOutputStream(tempMidiFile));
 		String tempFilename = tempFile.getPath();
 		tempFile.delete();
-		String command = timidity + " -Ow -o " + tempFilename + " " + tempMidiFile;
+		String command = timidity + " -Ow -s " + sampleRate + " -o " + tempFilename + " " + tempMidiFile;
 		System.out.println(command);
 		Process p = Runtime.getRuntime().exec(command);
 		while(true) {
@@ -96,6 +96,10 @@ public class ProcessKar {
 			throw new ConversionFailureException("Timidity failed: " + p.getOutputStream());
 		}
 		return new File(tempFile.getPath());
+	}
+	
+	public static File karToWav(String filename) throws IOException, ConversionFailureException {
+		return karToWav(filename, 44100);
 	}
 	
 	

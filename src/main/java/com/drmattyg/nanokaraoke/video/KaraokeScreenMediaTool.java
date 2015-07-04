@@ -23,6 +23,7 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	private MidiFile midiFile;
 	private IConverter converter = null;
 	private long audioTimeOffset;
+	private long zeroTimestamp = 0;
 	private static final long LYRIC_PRE_START_TIME = 100; // millisecods before the lyric to highlight it
 	private static final long LINE_PRE_START_TIME = 1500; // milliseconds before the line to draw it
 	protected KaraokeScreenMediaTool() {}
@@ -56,7 +57,10 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	
 	@Override
 	public void onVideoPicture(IVideoPictureEvent event) {
-		long time = event.getTimeStamp(TimeUnit.MILLISECONDS) - startTime;
+//		if(zeroTimestamp == 0) {
+//			zeroTimestamp = event.getTimeStamp(TimeUnit.MILLISECONDS);
+//		}
+		long time = event.getTimeStamp(TimeUnit.MILLISECONDS) - startTime; // this works with zero time offset
 		BufferedImage img = event.getImage();
 		// If the previously chained tool does some manipulation, getImage may return null and we need to convert the image
 		if(converter == null) converter = ConverterFactory.createConverter(ConverterFactory.XUGGLER_BGR_24, event.getPicture());

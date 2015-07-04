@@ -31,7 +31,8 @@ import static org.junit.Assert.*;
 public class LyricsOutputTest extends TestCase {
 	
 	
-	private static final String MIDI_FILE = "src/test/resources/in_the_ghetto.kar";
+//	private static final String MIDI_FILE = "src/test/resources/in_the_ghetto.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/test/Beautiful - Christina Aguilera.kar";
 
 	@Test
 	public void test() {
