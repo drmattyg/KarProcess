@@ -73,8 +73,8 @@ public class MediaTools {
 				} else if(startVideo) endFade = true;
 				
 				mediaWriter.encodeVideo(0, img, timestamp - startTime, TimeUnit.MILLISECONDS);
+				super.onVideoPicture(event);
 			}
-			super.onVideoPicture(event);
 		}
 		
 		public IMediaWriter cutVideo(IMediaReader mediaReader, int streamId) {

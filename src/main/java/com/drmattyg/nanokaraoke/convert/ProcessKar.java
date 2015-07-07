@@ -35,9 +35,9 @@ public class ProcessKar {
 		}
 		
 	}
-	public static void generateKarVideo(String videoFile, String midiFile, int startTime, String output, int targetWidth) throws Exception {
+	public static void generateKarVideo(String videoFile, String midiFile, String waveFile, int startTime, String output, int targetWidth) throws Exception {
 		MidiFile mf = MidiFile.getInstance(midiFile);
-		File wf = karToWav(midiFile);
+		File wf = new File(waveFile);
 		System.out.println(wf.getPath());
 		Rescaler r = Rescaler.getInstance(targetWidth, videoFile, MediaTools.OUTPUT_VIDEO_STREAM_ID);
 		int height = r.getTargetHeight();
@@ -62,6 +62,11 @@ public class ProcessKar {
 		
 		cutWriter.close();
 		
+	}
+	
+	public static void generateKarVideo(String videoFile, String midiFile, int startTime, String output, int targetWidth) throws Exception {
+		File waveFile = karToWav(midiFile);
+		generateKarVideo(videoFile, midiFile, waveFile.getPath(), startTime, output, targetWidth);
 	}
 	
 	public static File karToWav(String filename, int sampleRate) throws IOException, ConversionFailureException {

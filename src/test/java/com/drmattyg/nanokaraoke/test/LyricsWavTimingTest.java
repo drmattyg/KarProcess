@@ -23,12 +23,12 @@ public class LyricsWavTimingTest extends TestCase {
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/all_shook_up_karaoke_songs_NifterDotCom.kar";
 //	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar"; WORKS start delta = 0
 //	private static final String MIDI_FILE = "/Users/mgordon/Downloads/crazy_little_thing_called_love_karaoke_songs_NifterDotCom.kar";
-	private static final String MIDI_FILE = "/Users/mgordon/test/Big Girls Don't Cry - The Four Seasons.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/test/Sledgehammer - Peter Gabriel.kar";
+	private static final String MIDI_FILE = "/Users/mgordon/test/With a little help from my friends - The Beatles.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/murray_head-one_night_in_bangkok.mid";
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
-		int tempo = MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
-		int div = mf.getHeaderChunk().getDivision();
 		List<Integer> deltas = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
 		Map<Integer, TextEvent> events = MidiEventHandlers.TEXT_HANDLER.getTextMap();
 		try {
