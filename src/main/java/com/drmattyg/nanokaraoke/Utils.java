@@ -4,9 +4,11 @@ import java.util.Arrays;
 
 import com.xuggle.xuggler.ICodec.Type;
 import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IRational;
+import com.xuggle.xuggler.IStream;
 
 public class Utils {
-
+	private static final IRational millis = IRational.make(1, 1000);
 	public static int toInt(byte[] b, int offset) {
 		return (b[offset]<<24)&0xff000000|
 	       (b[offset+1]<<16)&0x00ff0000|
@@ -34,13 +36,16 @@ public class Utils {
 	}
 	
 	public static long getVideoLength(String filename) throws IllegalArgumentException {
+		
 		IContainer c = IContainer.make();
 		if(c.open(filename, IContainer.Type.READ, null) < 0) {
 			throw new IllegalArgumentException("Unable to open " + filename);
 		}
 		for(int i = 0; i < c.getNumStreams(); i++) {
 			if(c.getStream(i).getStreamCoder().getCodecType() == Type.CODEC_TYPE_VIDEO) {
-				return c.getStream(i).getDuration();
+				IStream s = c.getStream(i);
+				IRational tb = s.getTimeBase();
+				return millis.rescale(s.getDuration(), s.getTimeBase());
 			}
 		}
 		return -1;
