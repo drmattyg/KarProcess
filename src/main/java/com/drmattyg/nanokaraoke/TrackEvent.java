@@ -75,7 +75,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {
 			te.eventType = EventType.Sysex;
-			myOffset += 2;
+			myOffset += 1; // Fixed a bug here that was causing us to lose meta data, including tempo info
 			te.eventLength = VarLength.read(b, myOffset);
 		} else {
 			te.eventType = EventType.Midi;
