@@ -12,10 +12,10 @@ System.setProperty("timidity.exec", "/usr/local/bin/timidity")
 
 def songlistfile = args[0]
 def songs = new File(songlistfile).readLines().collect { it.trim() } 
-def videos = "ls ${VIDS}".execute().text.split(/\n/);
 
 songs.each { song ->
   println "${new Date()} Starting"
+  def videos = "ls ${VIDS}".execute().text.split(/\n/);
   def vid = VIDS + videos[(int)Math.floor(Math.random()*videos.size())]
   song = KARFILE_DIR + song
   def outputFile = OUTDIR + (song.split(/\./)[0] + ".mp4").split(/\//)[-1]
