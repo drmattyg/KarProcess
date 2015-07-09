@@ -80,7 +80,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 		} else {
 			te.eventType = EventType.Midi;
 			if(isStatusByte(b[myOffset])) {
-				te.statusByte = b[myOffset];
+				te.statusByte = b[myOffset]&0xFF;
 				te.hasStatusByte = true;
 			} else {
 				te.hasStatusByte = false;

@@ -3,9 +3,9 @@ import com.drmattyg.nanokaraoke.convert.ProcessKar
 import com.drmattyg.nanokaraoke.Utils
 import com.drmattyg.nanokaraoke.video.MediaTools
 
-def VIDS = "/Volumes/passport/videos/"
-def KARFILE_DIR = "/Volumes/passport/karfiles/"
-def OUTDIR = "/Volumes/passport/output/"
+def VIDS = "/Users/mgordon/test/karaoke/video/"
+def KARFILE_DIR = "/Users/mgordon/test/karaoke/karfile/"
+def OUTDIR = "/Users/mgordon/test/karaoke/output/"
 def FADE_TIME = 5
 def FFMPEG = "/usr/local/bin/ffmpeg"
 System.setProperty("timidity.exec", "/usr/local/bin/timidity")

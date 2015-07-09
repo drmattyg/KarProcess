@@ -94,6 +94,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 						&& te.getStatusByte() >= 0x90 && te.getStatusByte() <= 0x9F 
 						&& te.getTimeOffset() < startTime) {
 					startTime = te.getTimeOffset();
+					System.out.println(te.getOffset() + " : " + te.getStatusByte() + " : " + te.getTimeOffset());
 				}
 			}
 		}

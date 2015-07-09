@@ -87,7 +87,8 @@ public class ProcessKar {
 		Files.copy(karFile.toPath(), new FileOutputStream(tempMidiFile));
 		String tempFilename = tempFile.getPath();
 		tempFile.delete();
-		String command = timidity + " -Ow -s " + sampleRate + " -o " + tempFilename + " " + tempMidiFile;
+//		String command = timidity + " -Ow -s " + sampleRate + " -o " + tempFilename + " " + tempMidiFile;
+		String command = timidity + " --preserve-silence -Ow -s " + sampleRate + " -o " + tempFilename + " " + tempMidiFile;
 		System.out.println(command);
 		Process p = Runtime.getRuntime().exec(command);
 		while(true) {
