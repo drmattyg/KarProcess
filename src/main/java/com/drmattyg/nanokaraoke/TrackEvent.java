@@ -54,7 +54,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta
 	public boolean isText() { return isMeta() && metaType == MetaEventType.TEXT; }
 	public boolean isLyrics() { return isMeta() && metaType == MetaEventType.LYRICS; }
-	public TextEvent getTextEvent() { return isText() ? txt : null; }
+	public TextEvent getTextEvent() { return isText()  || isLyrics() ? txt : null; }
 	private TrackEvent() {}
 	public static TrackEvent getInstance(TrackChunk tc, int offset) {
 		TrackEvent te = new TrackEvent();
@@ -71,9 +71,9 @@ public class TrackEvent implements Comparable<TrackEvent> {
 			
 			myOffset++;
 			te.eventLength = VarLength.read(b, myOffset);
-			if(te.isText() || te.isLyrics()) {
-				te.txt = TextEvent.makeTextEvent(te);
-			}
+//			if(te.isText() || te.isLyrics()) {
+//				te.txt = TextEvent.makeTextEvent(te);
+//			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {
 			te.eventType = EventType.Sysex;
 			myOffset += 1; // Fixed a bug here that was causing us to lose meta data, including tempo info
@@ -152,6 +152,11 @@ public class TrackEvent implements Comparable<TrackEvent> {
 	
 	public static int getDataOffset(TrackEvent evt) {
 		return evt.offset + evt.metaType.dataOffset + evt.time.size;
+	}
+	public void setTextEvent(TextEvent evt) {
+		// really should clone this instead of just copying reference
+		this.txt = evt;
+		
 	}
 	
 	

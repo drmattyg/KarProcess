@@ -29,7 +29,7 @@ public class ScreenDraw {
 		try {
 			BufferedImage img = ImageIO.read(new File(IMAGE_FILE));
 			MidiFile mf = MidiFile.getInstance(MIDI_FILE);
-			KaraokeScreen sc = KaraokeScreen.getInstance(img, KaraokeLine.toKaraokeLines(mf), 4, 5, 1);
+			KaraokeScreen sc = KaraokeScreen.getInstance(img, KaraokeLine.toKaraokeLines(mf), 0, 1, 2);
 			BufferedImage b = sc.render();
 			JFrame f = new JFrame();
 			f.setSize(b.getWidth(), b.getHeight());

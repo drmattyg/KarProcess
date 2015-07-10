@@ -1,8 +1,6 @@
 package com.drmattyg.nanokaraoke;
 
-import com.drmattyg.nanokaraoke.MidiEventHandler.MetaEventType;
 import com.drmattyg.nanokaraoke.MidiFile.VarLength;
-import com.drmattyg.nanokaraoke.TrackEvent.EventType;
 
 public class TextEvent  { 
 
@@ -21,9 +19,6 @@ public class TextEvent  {
 		VarLength v = VarLength.read(bytes, offset + te.time.size + 2);
 		int textOffset = offset + te.time.size + 2 + v.size;
 		txt.text = Utils.byteToString(bytes, v.value, textOffset);
-		if(te.getMetaType() == MetaEventType.LYRICS) {
-			txt.text = txt.text.replace('\r', '/');
-		}
 		return txt;
 	}
 

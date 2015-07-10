@@ -48,10 +48,6 @@ public class LyricsTimingTest extends TestCase {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
 		List<Integer> deltas = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
 		Map<Integer, TextEvent> events = MidiEventHandlers.TEXT_HANDLER.getTextMap();
-		if(events.isEmpty()) {
-			events = MidiEventHandlers.LYRICS_HANDLER.getTextMap();
-			deltas = MidiEventHandlers.LYRICS_HANDLER.getSortedTimeOffsets();
-		}
 		try {
 			playFile(MIDI_FILE);
 			long startTime = System.currentTimeMillis();

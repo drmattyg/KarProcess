@@ -63,6 +63,9 @@ public class KaraokeLine implements Iterable<Entry<Long, String>> {
 		KaraokeLine kLine = new KaraokeLine();
 		for(TrackChunk tc : mf) {
 			for(TrackEvent te : tc) {
+				if(te.isLyrics()) {
+					System.out.println(te.getTextEvent());
+				}
 				if((te.isText() || te.isLyrics()) && !te.getTextEvent().toString().startsWith("@")) {
 					String text = te.getTextEvent().toString();
 					if(isLineStart(text)) {

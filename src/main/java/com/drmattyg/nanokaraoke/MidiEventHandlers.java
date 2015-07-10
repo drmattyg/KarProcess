@@ -14,8 +14,7 @@ public class MidiEventHandlers {
 
 	public static final TempoHandler TEMPO_HANDLER = new TempoHandler();
 	public static final TextHandler TEXT_HANDLER = new TextHandler();
-	public static final LyricsHandler LYRICS_HANDLER = new LyricsHandler();
-	public static final Collection<MidiEventHandler> DEFAULT_HANDLERS = Arrays.asList(TEMPO_HANDLER, TEXT_HANDLER); //, LYRICS_HANDLER);
+	public static final Collection<MidiEventHandler> DEFAULT_HANDLERS = Arrays.asList(TEMPO_HANDLER, TEXT_HANDLER);
 	public static class TempoHandler extends MidiEventHandler {
 	private SortedMap<Integer, Integer> timeTempoMap = new TreeMap<Integer, Integer>();
 
@@ -41,11 +40,24 @@ public class MidiEventHandlers {
 	
 	
 	public static class TextHandler extends MidiEventHandler {
+		private boolean isLineStart = true;
 		private SortedMap<Integer, TextEvent> lyricsMap = new TreeMap<Integer, TextEvent>();
 		@Override
 		public void handleEvent(TrackEvent te) {
 			if(te.getMetaType() != MetaEventType.TEXT && te.getMetaType() != MetaEventType.LYRICS) return;
-			lyricsMap.put(te.getTimeOffset(), TextEvent.makeTextEvent(te));
+			TextEvent txt = TextEvent.makeTextEvent(te);
+			if(te.getMetaType() == MetaEventType.LYRICS) {
+				if(txt.text.equals("\r")) {
+					isLineStart = true;
+					txt.text = "";
+				}
+				if(isLineStart) {
+					txt.text = "/" + txt.text;
+					isLineStart = false;
+				}
+			}
+			te.setTextEvent(txt);
+			lyricsMap.put(te.getTimeOffset(), txt);
 			
 		}
 		
@@ -56,28 +68,6 @@ public class MidiEventHandlers {
 		
 	}
 	
-	public static class LyricsHandler extends MidiEventHandler {
-		private boolean isLineStart = true;
-		private SortedMap<Integer, TextEvent> lyricsMap = new TreeMap<Integer, TextEvent>();
-		@Override
-		public void handleEvent(TrackEvent te) {
-			if(te.getMetaType() != MetaEventType.LYRICS) return;
-			TextEvent textEvent = TextEvent.makeTextEvent(te);
-			if(textEvent.text.equals("\r")) {
-				isLineStart = true;
-				return;
-			}
-			if(isLineStart) {
-				textEvent.text = "/" + textEvent.text;
-				isLineStart = false;
-			}
-			lyricsMap.put(te.getTimeOffset(), TextEvent.makeTextEvent(te));
-		}
-		public Map<Integer, TextEvent> getTextMap() { return lyricsMap; }
-		public List<Integer> getSortedTimeOffsets() { 
-			return new ArrayList<Integer>(lyricsMap.keySet());
-		}
-	}
 	
 	
 }
