@@ -5,7 +5,7 @@ import java.util.Map;
 
 public abstract class MidiEventHandler {
 	public enum MetaEventType {
-		TEXT(0x01, 2), TIME_SIG(0x58, 3), TEMPO(0x51, 3);
+		TEXT(0x01, 2), TIME_SIG(0x58, 3), TEMPO(0x51, 3), LYRICS(0x05, 1);
 		int val;
 		int dataOffset;
 		private static Map<Integer, MetaEventType> typeMap = new HashMap<Integer, MetaEventType>(MetaEventType.values().length);

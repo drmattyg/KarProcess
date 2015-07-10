@@ -53,6 +53,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 	}
 	public boolean isMeta() { return eventType == EventType.Meta; } // that's sooooo meta
 	public boolean isText() { return isMeta() && metaType == MetaEventType.TEXT; }
+	public boolean isLyrics() { return isMeta() && metaType == MetaEventType.LYRICS; }
 	public TextEvent getTextEvent() { return isText() ? txt : null; }
 	private TrackEvent() {}
 	public static TrackEvent getInstance(TrackChunk tc, int offset) {
@@ -70,7 +71,7 @@ public class TrackEvent implements Comparable<TrackEvent> {
 			
 			myOffset++;
 			te.eventLength = VarLength.read(b, myOffset);
-			if(te.isText()) {
+			if(te.isText() || te.isLyrics()) {
 				te.txt = TextEvent.makeTextEvent(te);
 			}
 		} else if(Marker.isSysexMarker(b[myOffset])) {
