@@ -30,6 +30,8 @@ public class KaraokeScreen {
 	private static final Color SUNG_COLOR = Color.CYAN;
 	private static final Color UNSUNG_COLOR = Color.MAGENTA;
 	private Font font = new Font("Verdana", Font.BOLD, 48);
+	private Font timeFont = new Font("Verdana", Font.PLAIN, 12);
+	public boolean showTime = false;
 	private int topLineIndex;
 	private int currentLineIndex;
 	private int lyricOffset;

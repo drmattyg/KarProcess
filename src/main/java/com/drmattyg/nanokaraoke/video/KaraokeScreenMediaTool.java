@@ -34,8 +34,8 @@ public class KaraokeScreenMediaTool extends MediaToolAdapter {
 	}
 	
 //	private int getTempo() {
-//		if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() == 0) return 500000; // this is the default if no tempo is specified
-//		return MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
+//		if(mf.getTempoHandler().getTempoMap().size() == 0) return 500000; // this is the default if no tempo is specified
+//		return mf.getTempoHandler().getTempoMap().values().iterator().next();
 //	}
 	
 	private Entry<Long, String> nextLyric() {

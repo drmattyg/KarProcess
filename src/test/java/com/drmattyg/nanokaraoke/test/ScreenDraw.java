@@ -21,8 +21,8 @@ import com.drmattyg.nanokaraoke.video.KaraokeScreen;
 public class ScreenDraw {
 
 	private static String IMAGE_FILE = "src/test/resources/cheetahs.jpg";
-//	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
-	private static final String MIDI_FILE = "/Users/mgordon/Downloads/363613mpgordon@alumni.princeton.edu/noy0202.mid";
+	private static final String MIDI_FILE = "src/test/resources/bridge_over_troubled_water.kar";
+//	private static final String MIDI_FILE = "/Users/mgordon/Downloads/363613mpgordon@alumni.princeton.edu/noy0202.mid";
 
 	@Test
 	public void test() {

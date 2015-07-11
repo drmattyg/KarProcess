@@ -28,10 +28,10 @@ public class KarLyricsTest {
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(fn);
-		List<Integer> events = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
+		List<Integer> events = mf.getTextHandler().getSortedTimeOffsets();
 		List<Long> eventMillis = new ArrayList<Long>();
-		assertEquals(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size(), 1); // dont currently handle more than one tempo
-		int tempo = MidiEventHandlers.TEMPO_HANDLER.getTempoMap().values().iterator().next();
+		assertEquals(mf.getTempoHandler().getTempoMap().size(), 1); // dont currently handle more than one tempo
+		int tempo = mf.getTempoHandler().getTempoMap().values().iterator().next();
 		assertTrue(tempo != 0);
 		int div = mf.getHeaderChunk().getDivision();
 		assertTrue(div != 0);

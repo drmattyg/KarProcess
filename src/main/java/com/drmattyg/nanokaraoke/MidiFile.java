@@ -5,12 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 
+import com.drmattyg.nanokaraoke.MidiEventHandlers.TempoHandler;
+import com.drmattyg.nanokaraoke.MidiEventHandlers.TextHandler;
 import com.drmattyg.nanokaraoke.TrackEvent.EventType;
 //1 division = 1 dtu/qn
 //tempo = us/qn
@@ -52,8 +55,19 @@ public class MidiFile implements Iterable<TrackChunk>{
 	HeaderChunk header;
 	private List<TrackChunk> trackChunks = new ArrayList<TrackChunk>();
 	private int tempo = -1;
-	public Collection<MidiEventHandler> midiEventHandlers = MidiEventHandlers.DEFAULT_HANDLERS;  // going to let users manually handle this for now
+	public TempoHandler getTempoHandler() {
+		return tempoHandler;
+	}
+	public TextHandler getTextHandler() {
+		return textHandler;
+	}
+
+	private TempoHandler tempoHandler = new TempoHandler();
+	private TextHandler textHandler = new TextHandler();
 	
+	// these are now associated by default individually with each midi file separately
+	private Collection<MidiEventHandler> midiEventHandlers = Arrays.asList(tempoHandler, textHandler);
+
 	private MidiFile() { };
 	public static MidiFile getInstance(String s) {
 		MidiFile mf = new  MidiFile();
@@ -65,9 +79,9 @@ public class MidiFile implements Iterable<TrackChunk>{
 			while(tcIterator.hasNext()) {
 				mf.trackChunks.add(tcIterator.next());
 			}
-			
-			if(MidiEventHandlers.TEMPO_HANDLER.getTempoMap().size() < 2) {
-				mf.tempo = MidiEventHandlers.TEMPO_HANDLER.getInitialTempo();
+
+			if(mf.tempoHandler.getTempoMap().size() < 2) {
+				mf.tempo = mf.tempoHandler.getInitialTempo();
 			}
 			
 			return mf;
@@ -148,7 +162,7 @@ public class MidiFile implements Iterable<TrackChunk>{
 			return Utils.deltaToMillis(tempo, div, delta);
 		}
 
-		SortedMap<Integer, Integer> tempoMap = MidiEventHandlers.TEMPO_HANDLER.getTempoMap().subMap(0, delta);
+		SortedMap<Integer, Integer> tempoMap = tempoHandler.getTempoMap().subMap(0, delta);
 		long offset = 0;
 
 		int lastTempo = 0;
@@ -160,6 +174,9 @@ public class MidiFile implements Iterable<TrackChunk>{
 		}
 		offset += Utils.deltaToMillis(lastTempo, div, delta - lastDelta);
 		return offset;
+	}
+	public Collection<MidiEventHandler> getMidiEventHandlers() {
+		return midiEventHandlers;
 	}
 	
 	

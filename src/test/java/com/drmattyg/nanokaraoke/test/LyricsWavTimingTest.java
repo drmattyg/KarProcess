@@ -31,8 +31,8 @@ public class LyricsWavTimingTest extends TestCase {
 	@Test
 	public void test() {
 		MidiFile mf = MidiFile.getInstance(MIDI_FILE);
-		List<Integer> deltas = MidiEventHandlers.TEXT_HANDLER.getSortedTimeOffsets();
-		Map<Integer, TextEvent> events = MidiEventHandlers.TEXT_HANDLER.getTextMap();
+		List<Integer> deltas = mf.getTextHandler().getSortedTimeOffsets();
+		Map<Integer, TextEvent> events = mf.getTextHandler().getTextMap();
 		try {
 			File wf = ProcessKar.karToWav(MIDI_FILE);
 			AudioInputStream stream = AudioSystem.getAudioInputStream(wf);

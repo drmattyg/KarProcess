@@ -40,7 +40,7 @@ public class LyricsOutputTest extends TestCase {
 			BufferedImage img = ImageIO.read(new File("src/test/resources/cheetahs.jpg"));
 			MidiFile mf = MidiFile.getInstance(MIDI_FILE);
 			KaraokeScreenMediaTool ks = KaraokeScreenMediaTool.getInstance(mf, 5000);
-			Map<Integer, com.drmattyg.nanokaraoke.TextEvent> m = MidiEventHandlers.TEXT_HANDLER.getTextMap();
+			Map<Integer, com.drmattyg.nanokaraoke.TextEvent> m = mf.getTextHandler().getTextMap();
 			List<KaraokeLine> lines = KaraokeLine.toKaraokeLines(mf);
 			long duration = 1000*60*5;
 			IConverter conv = ConverterFactory.createConverter(img, Type.ABGR);

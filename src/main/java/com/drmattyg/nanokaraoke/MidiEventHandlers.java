@@ -12,9 +12,9 @@ import java.util.TreeMap;
 
 public class MidiEventHandlers {
 
-	public static final TempoHandler TEMPO_HANDLER = new TempoHandler();
-	public static final TextHandler TEXT_HANDLER = new TextHandler();
-	public static final Collection<MidiEventHandler> DEFAULT_HANDLERS = Arrays.asList(TEMPO_HANDLER, TEXT_HANDLER);
+//	public static final TempoHandler TEMPO_HANDLER = new TempoHandler();
+//	public static final TextHandler TEXT_HANDLER = new TextHandler();
+//	public static final Collection<MidiEventHandler> DEFAULT_HANDLERS = Arrays.asList(TEMPO_HANDLER, TEXT_HANDLER);
 	public static class TempoHandler extends MidiEventHandler {
 	private SortedMap<Integer, Integer> timeTempoMap = new TreeMap<Integer, Integer>();
 
@@ -67,6 +67,7 @@ public class MidiEventHandlers {
 		}
 		
 	}
+
 	
 	
 	

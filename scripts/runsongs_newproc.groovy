@@ -3,7 +3,8 @@ import com.drmattyg.nanokaraoke.convert.ProcessKar
 import com.drmattyg.nanokaraoke.Utils
 import com.drmattyg.nanokaraoke.video.MediaTools
 
-def VIDS = "/Users/mgordon/projects/karaoke/videos/"
+// def VIDS = "/Users/mgordon/projects/karaoke/videos/"
+def VIDS = "/Volumes/passport/videos/"
 def KARFILE_DIR = "/Users/mgordon/projects/karaoke/karfiles/"
 //def OUTDIR = "/Users/mgordon/test/karaoke/output/"
 def FADE_TIME = 5
@@ -45,7 +46,7 @@ songs.each { song ->
         p.waitFor()
         println "${new Date()} Running generateKarVideo"
 //        ProcessKar.generateKarVideo(vid_output_temp, song, waveFile.getPath(), 0, outputFile, 720)
-        def processor = ["java", "-Dtimidity.exec=/usr/local/bin/timidity", "-jar", "../b uild/libs/KarProcess-standalone.jar", "-v", vid_output_temp, "-o", outputFile, "-m", song, "-w", 960]
+        def processor = ["java", "-Dtimidity.exec=/usr/local/bin/timidity", "-jar", "../build/libs/KarProcess-standalone.jar", "-v", vid_output_temp, "-o", outputFile, "-m", song, "-w", 960]
         println processor.join()
         def proc = processor.execute()
         proc.waitForProcessOutput( System.out, System.err )
