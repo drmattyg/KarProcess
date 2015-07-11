@@ -44,7 +44,11 @@ songs.each { song ->
         def p = cmd.execute()
         p.waitFor()
         println "${new Date()} Running generateKarVideo"
-        ProcessKar.generateKarVideo(vid_output_temp, song, waveFile.getPath(), 0, outputFile, 720)
+//        ProcessKar.generateKarVideo(vid_output_temp, song, waveFile.getPath(), 0, outputFile, 720)
+        def processor = ["java", "-Dtimidity.exec=/usr/local/bin/timidity", "-jar", "../b uild/libs/KarProcess-standalone.jar", "-v", vid_output_temp, "-o", outputFile, "-m", song, "-w", 960]
+        println processor.join()
+        def proc = processor.execute()
+        proc.waitForProcessOutput( System.out, System.err )
         new File(vid_output_temp).delete()
         println "${new Date()} Done"
   } catch(Exception ex) { println "FAILED:"; ex.printStackTrace() }
